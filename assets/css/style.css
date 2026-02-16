@@ -50,6 +50,36 @@ body {
     font-size: 1.05rem;
 }
 
+.sidebar-header .brand-logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.sidebar-header .brand-icon {
+    width: 34px;
+    height: 34px;
+    background: linear-gradient(135deg, var(--primary) 0%, var(--info) 100%);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.1rem;
+    color: #fff;
+    flex-shrink: 0;
+}
+
+.sidebar-header .brand-name {
+    color: #fff;
+    font-size: 1rem;
+    font-weight: 700;
+}
+
+.sidebar-header .brand-sub {
+    color: rgba(255,255,255,0.5);
+    font-size: 0.7rem;
+}
+
 .sidebar-nav {
     padding: 8px 0;
 }
@@ -92,6 +122,14 @@ body {
     font-size: 1rem;
 }
 
+.sidebar-nav .nav-link .nav-badge {
+    margin-left: auto;
+    font-size: 0.65rem;
+    padding: 2px 7px;
+    border-radius: 10px;
+    font-weight: 600;
+}
+
 /* メインコンテンツ */
 .main-content {
     margin-left: var(--sidebar-width);
@@ -112,6 +150,94 @@ body {
     background: #fff;
     border-bottom: 1px solid #e2e8f0;
     box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+
+.topbar .topbar-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.topbar .topbar-right {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.topbar .topbar-icon-btn {
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #64748b;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    transition: all 0.15s;
+    position: relative;
+    text-decoration: none;
+}
+
+.topbar .topbar-icon-btn:hover {
+    background: #f1f5f9;
+    color: #1e293b;
+}
+
+.topbar .notification-dot {
+    position: absolute;
+    top: 6px;
+    right: 6px;
+    width: 8px;
+    height: 8px;
+    background: var(--danger);
+    border-radius: 50%;
+    border: 2px solid #fff;
+}
+
+.topbar .user-pill {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 4px 12px 4px 4px;
+    border-radius: 50px;
+    background: #fff;
+    border: 1px solid #e2e8f0;
+    cursor: pointer;
+    transition: all 0.15s;
+    text-decoration: none;
+    color: #1e293b;
+}
+
+.topbar .user-pill:hover {
+    border-color: var(--primary-light);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.topbar .user-avatar {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: var(--primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-size: 0.8rem;
+    font-weight: 600;
+}
+
+.topbar .user-info .user-name {
+    font-size: 0.82rem;
+    font-weight: 600;
+    line-height: 1.2;
+}
+
+.topbar .user-info .user-role {
+    font-size: 0.68rem;
+    color: #94a3b8;
+    line-height: 1.2;
 }
 
 .page-content {
@@ -176,6 +302,7 @@ body {
 .bg-gradient-warning { background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); }
 .bg-gradient-danger { background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%); }
 .bg-gradient-info { background: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%); }
+.bg-gradient-purple { background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%); }
 
 /* テーブル */
 .table { font-size: 0.875rem; }
@@ -189,7 +316,6 @@ body {
 
 .table-hover tbody tr:hover {
     background: #f0f7ff;
-    cursor: pointer;
 }
 
 /* バッジ */
@@ -198,6 +324,14 @@ body {
     padding: 4px 8px;
     font-size: 0.75rem;
 }
+
+.badge-glass { /* compatibility */ }
+.badge-scheduled { background: rgba(59,130,246,0.12); color: #2563eb; }
+.badge-checkedin { background: rgba(16,185,129,0.12); color: #059669; }
+.badge-inprogress { background: rgba(245,158,11,0.12); color: #d97706; }
+.badge-completed { background: rgba(16,185,129,0.12); color: #059669; }
+.badge-cancelled { background: rgba(107,114,128,0.12); color: #4b5563; }
+.badge-noshow { background: rgba(239,68,68,0.12); color: #dc2626; }
 
 /* アラート */
 .vital-normal { color: var(--success); }
@@ -311,6 +445,290 @@ body {
     color: var(--primary);
 }
 
+/* SOAP */
+.soap-section {
+    border-left: 4px solid;
+    padding: 12px 16px;
+    margin-bottom: 12px;
+    background: #fafafa;
+    border-radius: 0 8px 8px 0;
+}
+
+.soap-s { border-left-color: #3b82f6; }
+.soap-o { border-left-color: #10b981; }
+.soap-a { border-left-color: #f59e0b; }
+.soap-p { border-left-color: #ef4444; }
+
+/* ログインページ */
+.login-page {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.login-card {
+    width: 100%;
+    max-width: 420px;
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: 0 25px 50px rgba(0,0,0,0.25);
+    padding: 40px;
+}
+
+.login-logo {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.login-logo i {
+    font-size: 3rem;
+    color: var(--danger);
+}
+
+.login-logo .logo-icon {
+    width: 56px;
+    height: 56px;
+    background: linear-gradient(135deg, var(--primary) 0%, var(--info) 100%);
+    border-radius: 14px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 10px;
+}
+
+.login-logo .logo-icon i {
+    font-size: 1.6rem;
+    color: #fff;
+}
+
+/* ドキュメント印刷 */
+.document-print {
+    max-width: 210mm;
+    margin: 0 auto;
+    padding: 20mm;
+    background: #fff;
+    font-family: 'Yu Gothic', 'Hiragino Sans', serif;
+    font-size: 11pt;
+    line-height: 1.8;
+}
+
+.document-print table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.document-print table th,
+.document-print table td {
+    border: 1px solid #333;
+    padding: 6px 10px;
+}
+
+.document-print .doc-title {
+    text-align: center;
+    font-size: 18pt;
+    font-weight: bold;
+    margin: 20px 0 30px;
+    letter-spacing: 0.3em;
+}
+
+.document-print .doc-stamp {
+    width: 80px;
+    height: 80px;
+    border: 2px solid #c00;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #c00;
+    font-size: 0.9rem;
+    font-weight: bold;
+}
+
+/* アニメーション */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+}
+
+.fade-in {
+    animation: fadeIn 0.3s ease-out;
+}
+
+/* スクロールバー */
+.sidebar::-webkit-scrollbar { width: 4px; }
+.sidebar::-webkit-scrollbar-track { background: transparent; }
+.sidebar::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 2px; }
+
+/* タブ */
+.nav-tabs .nav-link {
+    color: #64748b;
+    font-weight: 500;
+    border: none;
+    padding: 10px 16px;
+}
+
+.nav-tabs .nav-link.active {
+    color: var(--primary);
+    border-bottom: 2px solid var(--primary);
+    background: transparent;
+}
+
+/* アラートタグ */
+.allergy-tag {
+    display: inline-block;
+    background: #fef2f2;
+    color: #dc2626;
+    border: 1px solid #fecaca;
+    border-radius: 20px;
+    padding: 2px 10px;
+    font-size: 0.75rem;
+    font-weight: 500;
+}
+
+.chronic-tag {
+    display: inline-block;
+    background: #fefce8;
+    color: #ca8a04;
+    border: 1px solid #fde68a;
+    border-radius: 20px;
+    padding: 2px 10px;
+    font-size: 0.75rem;
+    font-weight: 500;
+}
+
+/* グラスアラート */
+.glass-alert {
+    border-radius: 10px;
+}
+
+/* 温度板グラフ */
+.chart-container {
+    position: relative;
+    width: 100%;
+    height: 300px;
+}
+
+/* 看護タスク */
+.task-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 16px;
+    border-bottom: 1px solid #f1f5f9;
+    transition: background 0.15s;
+}
+
+.task-item:hover { background: #f8fafc; }
+
+.task-item.completed { opacity: 0.6; }
+.task-item.completed .task-name { text-decoration: line-through; }
+
+.task-priority-high { border-left: 3px solid var(--danger); }
+.task-priority-normal { border-left: 3px solid var(--primary); }
+.task-priority-low { border-left: 3px solid #94a3b8; }
+
+/* キュー表示 */
+.queue-card {
+    border-radius: 12px;
+    padding: 16px;
+    border: 2px solid #e2e8f0;
+    background: #fff;
+    transition: all 0.2s;
+}
+
+.queue-card:hover { border-color: var(--primary-light); }
+
+.queue-card.queue-active {
+    border-color: var(--success);
+    background: #f0fdf4;
+}
+
+.queue-number {
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #fff;
+}
+
+/* 公開予約ページ */
+.booking-page {
+    min-height: 100vh;
+    background: linear-gradient(180deg, #f0f9ff 0%, #e0f2fe 50%, #f0f9ff 100%);
+}
+
+.booking-card {
+    max-width: 600px;
+    margin: 0 auto;
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    overflow: hidden;
+}
+
+.booking-header {
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+    color: #fff;
+    padding: 28px;
+    text-align: center;
+}
+
+.time-slot-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+    gap: 8px;
+}
+
+.time-slot {
+    padding: 10px;
+    text-align: center;
+    border-radius: 8px;
+    border: 2px solid #e2e8f0;
+    cursor: pointer;
+    transition: all 0.15s;
+    font-weight: 600;
+    font-size: 0.85rem;
+}
+
+.time-slot:hover { border-color: var(--primary); background: #eff6ff; }
+.time-slot.selected { border-color: var(--primary); background: var(--primary); color: #fff; }
+.time-slot.disabled { opacity: 0.4; pointer-events: none; background: #f1f5f9; }
+
+/* プラグインカード */
+.plugin-card {
+    border-radius: 10px;
+    border: 1px solid #e2e8f0;
+    padding: 16px;
+    transition: all 0.2s;
+    background: #fff;
+}
+
+.plugin-card:hover { border-color: var(--primary-light); }
+.plugin-card.plugin-enabled {
+    border-color: var(--success);
+    background: #f0fdf4;
+}
+
+/* 空状態 */
+.empty-state {
+    text-align: center;
+    padding: 40px 20px;
+    color: #94a3b8;
+}
+
+.empty-state i { font-size: 3rem; margin-bottom: 16px; opacity: 0.5; }
+
 /* 印刷 */
 @media print {
     .sidebar, .topbar, .sidebar-overlay, .no-print { display: none !important; }
@@ -375,167 +793,6 @@ body {
     }
 
     .card-body { padding: 14px; }
-}
-
-/* 温度板グラフ */
-.chart-container {
-    position: relative;
-    width: 100%;
-    height: 300px;
-}
-
-/* 看護タスク */
-.task-item {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 10px 16px;
-    border-bottom: 1px solid #f1f5f9;
-    transition: background 0.15s;
-}
-
-.task-item:hover { background: #f8fafc; }
-
-.task-item.completed { opacity: 0.6; }
-.task-item.completed .task-name { text-decoration: line-through; }
-
-.task-priority-high { border-left: 3px solid var(--danger); }
-.task-priority-normal { border-left: 3px solid var(--primary); }
-.task-priority-low { border-left: 3px solid #94a3b8; }
-
-/* SOAP */
-.soap-section {
-    border-left: 4px solid;
-    padding: 12px 16px;
-    margin-bottom: 12px;
-    background: #fafafa;
-    border-radius: 0 8px 8px 0;
-}
-
-.soap-s { border-left-color: #3b82f6; }
-.soap-o { border-left-color: #10b981; }
-.soap-a { border-left-color: #f59e0b; }
-.soap-p { border-left-color: #ef4444; }
-
-/* ログインページ */
-.login-page {
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-}
-
-.login-card {
-    width: 100%;
-    max-width: 420px;
-    background: #fff;
-    border-radius: 16px;
-    box-shadow: 0 25px 50px rgba(0,0,0,0.25);
-    padding: 40px;
-}
-
-.login-logo {
-    text-align: center;
-    margin-bottom: 30px;
-}
-
-.login-logo i {
-    font-size: 3rem;
-    color: var(--danger);
-}
-
-/* ドキュメント印刷 */
-.document-print {
-    max-width: 210mm;
-    margin: 0 auto;
-    padding: 20mm;
-    background: #fff;
-    font-family: 'Yu Gothic', 'Hiragino Sans', serif;
-    font-size: 11pt;
-    line-height: 1.8;
-}
-
-.document-print table {
-    width: 100%;
-    border-collapse: collapse;
-}
-
-.document-print table th,
-.document-print table td {
-    border: 1px solid #333;
-    padding: 6px 10px;
-}
-
-.document-print .doc-title {
-    text-align: center;
-    font-size: 18pt;
-    font-weight: bold;
-    margin: 20px 0 30px;
-    letter-spacing: 0.3em;
-}
-
-.document-print .doc-stamp {
-    width: 80px;
-    height: 80px;
-    border: 2px solid #c00;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #c00;
-    font-size: 0.9rem;
-    font-weight: bold;
-}
-
-/* アニメーション */
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(10px); }
-    to { opacity: 1; transform: translateY(0); }
-}
-
-.fade-in {
-    animation: fadeIn 0.3s ease-out;
-}
-
-/* スクロールバー */
-.sidebar::-webkit-scrollbar { width: 4px; }
-.sidebar::-webkit-scrollbar-track { background: transparent; }
-.sidebar::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 2px; }
-
-/* タブ */
-.nav-tabs .nav-link {
-    color: #64748b;
-    font-weight: 500;
-    border: none;
-    padding: 10px 16px;
-}
-
-.nav-tabs .nav-link.active {
-    color: var(--primary);
-    border-bottom: 2px solid var(--primary);
-    background: transparent;
-}
-
-/* アラートタグ */
-.allergy-tag {
-    display: inline-block;
-    background: #fef2f2;
-    color: #dc2626;
-    border: 1px solid #fecaca;
-    border-radius: 20px;
-    padding: 2px 10px;
-    font-size: 0.75rem;
-    font-weight: 500;
-}
-
-.chronic-tag {
-    display: inline-block;
-    background: #fefce8;
-    color: #ca8a04;
-    border: 1px solid #fde68a;
-    border-radius: 20px;
-    padding: 2px 10px;
-    font-size: 0.75rem;
-    font-weight: 500;
+    
+    .login-card { padding: 28px; margin: 16px; }
 }

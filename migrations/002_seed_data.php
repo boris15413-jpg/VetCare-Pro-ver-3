@@ -430,7 +430,7 @@ $pathologies = [
 ];
 
 foreach ($pathologies as $path) {
-    $db->query("INSERT INTO pathology (patient_id, record_id, pathology_number, specimen_type, collection_site, collection_date, collected_by, fixation_method, gross_description, microscopic_description, diagnosis, pathologist, status, report_date, created_at) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,datetime('now','localtime'))", $path);
+    $db->query("INSERT OR IGNORE INTO pathology (patient_id, record_id, pathology_number, specimen_type, collection_site, collection_date, collected_by, fixation_method, gross_description, microscopic_description, diagnosis, pathologist, status, report_date, created_at) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,datetime('now','localtime'))", $path);
 }
 echo "✓ 病理検査データ投入完了\n";
 
@@ -441,7 +441,7 @@ $invoices = [
 ];
 
 foreach ($invoices as $inv) {
-    $db->query("INSERT INTO invoices (invoice_number, patient_id, owner_id, record_id, subtotal, tax, discount, insurance_covered, total, payment_method, payment_status, paid_at, created_by, created_at) VALUES (?,?,?,?,?,?,?,?,?,?,?,datetime('now','localtime'),1,datetime('now','localtime'))", $inv);
+    $db->query("INSERT OR IGNORE INTO invoices (invoice_number, patient_id, owner_id, record_id, subtotal, tax, discount, insurance_covered, total, payment_method, payment_status, paid_at, created_by, created_at) VALUES (?,?,?,?,?,?,?,?,?,?,?,datetime('now','localtime'),1,datetime('now','localtime'))", $inv);
 }
 
 // --- 18. 会計明細 ---

@@ -3,6 +3,10 @@
 $id = (int)($_GET['id'] ?? 0);
 $patient = $id ? $db->fetch("SELECT * FROM patients WHERE id = ?", [$id]) : null;
 $owners = $db->fetchAll("SELECT id, name, owner_code FROM owners WHERE is_active = 1 ORDER BY name");
+$insuranceCompanies = $db->fetchAll("SELECT * FROM insurance_master WHERE is_active = 1 ORDER BY company_name");
+
+// Get existing insurance policies for this patient
+$existingPolicies = $id ? $db->fetchAll("SELECT ip.*, im.company_name as master_name FROM insurance_policies ip LEFT JOIN insurance_master im ON ip.insurance_master_id = im.id WHERE ip.patient_id = ? ORDER BY ip.status DESC, ip.created_at DESC", [$id]) : [];
 
 $error = '';
 
@@ -56,6 +60,35 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $id = $db->insert('patients', $data);
             $auth->logActivity($auth->currentUserId(), 'create_patient', "患畜登録: {$data['name']}", 'patient', $id);
         }
+        
+        // Save insurance policy if provided
+        $policyCompany = trim($_POST['policy_company'] ?? '');
+        $policyNumber = trim($_POST['policy_number'] ?? '');
+        if ($policyCompany && $policyNumber) {
+            $existingPolicy = $db->fetch("SELECT id FROM insurance_policies WHERE patient_id = ? AND policy_number = ?", [$id, $policyNumber]);
+            $policyData = [
+                'patient_id' => $id,
+                'insurance_master_id' => (int)($_POST['insurance_master_id'] ?? 0) ?: null,
+                'company_name' => $policyCompany,
+                'policy_number' => $policyNumber,
+                'coverage_rate' => (int)($_POST['policy_coverage_rate'] ?? 50),
+                'plan_name' => trim($_POST['plan_name'] ?? ''),
+                'holder_name' => trim($_POST['holder_name'] ?? ''),
+                'start_date' => $_POST['policy_start_date'] ?: null,
+                'end_date' => $_POST['policy_end_date'] ?: null,
+                'annual_limit' => (int)($_POST['annual_limit'] ?? 0),
+                'status' => 'active',
+                'updated_at' => date('Y-m-d H:i:s'),
+            ];
+            if ($existingPolicy) {
+                $db->update('insurance_policies', $policyData, 'id = ?', [$existingPolicy['id']]);
+            } else {
+                $policyData['created_at'] = date('Y-m-d H:i:s');
+                $db->insert('insurance_policies', $policyData);
+            }
+        }
+        
+        setFlash('success', ($data['name'] ?? '') . ' の情報を保存しました');
         redirect("?page=patient_detail&id={$id}");
     }
 }
@@ -149,17 +182,84 @@ $ownerIdFromGet = (int)($_GET['owner_id'] ?? ($p['owner_id'] ?? 0));
                     <label class="form-label">既往歴・持病</label>
                     <textarea name="chronic_conditions" class="form-control" rows="2"><?= h($p['chronic_conditions'] ?? '') ?></textarea>
                 </div>
+                <div class="col-12"><hr class="my-2"><h6 class="fw-bold"><i class="bi bi-shield-check me-1 text-info"></i>ペット保険情報</h6></div>
                 <div class="col-md-4">
                     <label class="form-label">保険会社</label>
-                    <input type="text" name="insurance_company" class="form-control" value="<?= h($p['insurance_company'] ?? '') ?>">
+                    <select name="insurance_company" class="form-select" id="insCompanySelect" onchange="fillInsuranceInfo(this)">
+                        <option value="">未加入</option>
+                        <?php foreach ($insuranceCompanies as $ic): ?>
+                        <option value="<?= h($ic['company_name']) ?>" data-id="<?= $ic['id'] ?>" data-rates="<?= h($ic['coverage_rates']) ?>" <?= ($p['insurance_company'] ?? '') === $ic['company_name'] ? 'selected' : '' ?>>
+                            <?= h($ic['company_name']) ?>
+                        </option>
+                        <?php endforeach; ?>
+                        <option value="other" <?= ($p['insurance_company'] ?? '') && !in_array($p['insurance_company'] ?? '', array_column($insuranceCompanies, 'company_name')) ? 'selected' : '' ?>>その他（手入力）</option>
+                    </select>
+                    <input type="hidden" name="insurance_master_id" id="insMasterId" value="">
                 </div>
                 <div class="col-md-4">
                     <label class="form-label">保険証番号</label>
-                    <input type="text" name="insurance_number" class="form-control" value="<?= h($p['insurance_number'] ?? '') ?>">
+                    <input type="text" name="insurance_number" class="form-control" value="<?= h($p['insurance_number'] ?? '') ?>" placeholder="証券番号">
                 </div>
                 <div class="col-md-4">
                     <label class="form-label">保険負担率 (%)</label>
-                    <input type="number" name="insurance_rate" class="form-control" min="0" max="100" value="<?= h($p['insurance_rate'] ?? 0) ?>">
+                    <select name="insurance_rate" class="form-select" id="insRateSelect">
+                        <option value="0" <?= ($p['insurance_rate'] ?? 0) == 0 ? 'selected' : '' ?>>0% (未加入)</option>
+                        <option value="50" <?= ($p['insurance_rate'] ?? 0) == 50 ? 'selected' : '' ?>>50%</option>
+                        <option value="70" <?= ($p['insurance_rate'] ?? 0) == 70 ? 'selected' : '' ?>>70%</option>
+                        <option value="90" <?= ($p['insurance_rate'] ?? 0) == 90 ? 'selected' : '' ?>>90%</option>
+                        <option value="100" <?= ($p['insurance_rate'] ?? 0) == 100 ? 'selected' : '' ?>>100%</option>
+                    </select>
+                </div>
+
+                <!-- 保険証券登録 (レセプト用) -->
+                <div class="col-12 mt-2" id="policySection" style="<?= ($p['insurance_company'] ?? '') ? '' : 'display:none' ?>">
+                    <div class="p-3 bg-light rounded border">
+                        <h6 class="fw-bold mb-2"><i class="bi bi-file-earmark-text me-1"></i>保険証券情報（レセプト作成に必要）</h6>
+                        <?php 
+                        $activePolicy = !empty($existingPolicies) ? $existingPolicies[0] : [];
+                        ?>
+                        <div class="row g-2">
+                            <div class="col-md-4">
+                                <label class="form-label">証券番号（レセプト用）</label>
+                                <input type="text" name="policy_number" class="form-control form-control-sm" value="<?= h($activePolicy['policy_number'] ?? ($p['insurance_number'] ?? '')) ?>" placeholder="証券番号">
+                                <input type="hidden" name="policy_company" value="<?= h($activePolicy['company_name'] ?? ($p['insurance_company'] ?? '')) ?>" id="policyCompanyHidden">
+                            </div>
+                            <div class="col-md-2">
+                                <label class="form-label">補償割合</label>
+                                <select name="policy_coverage_rate" class="form-select form-select-sm">
+                                    <option value="50" <?= ($activePolicy['coverage_rate'] ?? 50) == 50 ? 'selected' : '' ?>>50%</option>
+                                    <option value="70" <?= ($activePolicy['coverage_rate'] ?? 50) == 70 ? 'selected' : '' ?>>70%</option>
+                                    <option value="90" <?= ($activePolicy['coverage_rate'] ?? 50) == 90 ? 'selected' : '' ?>>90%</option>
+                                    <option value="100" <?= ($activePolicy['coverage_rate'] ?? 50) == 100 ? 'selected' : '' ?>>100%</option>
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label">プラン名</label>
+                                <input type="text" name="plan_name" class="form-control form-control-sm" value="<?= h($activePolicy['plan_name'] ?? '') ?>">
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label">契約者名</label>
+                                <input type="text" name="holder_name" class="form-control form-control-sm" value="<?= h($activePolicy['holder_name'] ?? '') ?>">
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label">契約開始日</label>
+                                <input type="text" name="policy_start_date" class="form-control form-control-sm datepicker" value="<?= h($activePolicy['start_date'] ?? '') ?>">
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label">契約終了日</label>
+                                <input type="text" name="policy_end_date" class="form-control form-control-sm datepicker" value="<?= h($activePolicy['end_date'] ?? '') ?>">
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label">年間限度額</label>
+                                <input type="number" name="annual_limit" class="form-control form-control-sm" value="<?= h($activePolicy['annual_limit'] ?? 0) ?>">
+                            </div>
+                        </div>
+                        <?php if (!empty($existingPolicies)): ?>
+                        <div class="mt-2">
+                            <small class="text-success"><i class="bi bi-check-circle me-1"></i>登録済み保険証券: <?= count($existingPolicies) ?>件</small>
+                        </div>
+                        <?php endif; ?>
+                    </div>
                 </div>
                 <div class="col-12">
                     <label class="form-label">備考</label>
@@ -173,3 +273,36 @@ $ownerIdFromGet = (int)($_GET['owner_id'] ?? ($p['owner_id'] ?? 0));
         </div>
     </form>
 </div>
+
+<script>
+function fillInsuranceInfo(sel) {
+    const opt = sel.options[sel.selectedIndex];
+    const section = document.getElementById('policySection');
+    const masterId = document.getElementById('insMasterId');
+    const policyCompany = document.getElementById('policyCompanyHidden');
+    
+    if (sel.value && sel.value !== 'other') {
+        section.style.display = '';
+        masterId.value = opt.dataset.id || '';
+        policyCompany.value = sel.value;
+        
+        // Update rate dropdown based on company rates
+        const rates = (opt.dataset.rates || '50,70').split(',');
+        const rateSelect = document.getElementById('insRateSelect');
+        // Auto-select first rate
+        if (rates.length > 0) {
+            for (let o of rateSelect.options) {
+                if (o.value === rates[0].trim()) { o.selected = true; break; }
+            }
+        }
+    } else if (sel.value === 'other') {
+        section.style.display = '';
+        masterId.value = '';
+        policyCompany.value = '';
+    } else {
+        section.style.display = 'none';
+        masterId.value = '';
+        policyCompany.value = '';
+    }
+}
+</script>

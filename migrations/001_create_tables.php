@@ -1,7 +1,6 @@
 <?php
 /**
- * VetCare Pro - データベースマイグレーション (統合版)
- * 全てのテーブルを初期作成します
+ * VetCare Pro v2.0 - Database Migration (Complete Schema)
  */
 
 require_once __DIR__ . '/../includes/config.php';
@@ -15,7 +14,6 @@ $dt = $isMySQL ? 'DATETIME' : 'TEXT';
 $intPK = $isMySQL ? 'INT AUTO_INCREMENT PRIMARY KEY' : 'INTEGER PRIMARY KEY AUTOINCREMENT';
 
 $tables = [
-    // 職種マスタ
     "CREATE TABLE IF NOT EXISTS staff_roles (
         id {$intPK},
         role_key VARCHAR(50) UNIQUE NOT NULL,
@@ -25,7 +23,6 @@ $tables = [
         created_at {$dt} DEFAULT CURRENT_TIMESTAMP
     )",
 
-    // スタッフ (v3追加: stamp_image)
     "CREATE TABLE IF NOT EXISTS staff (
         id {$intPK},
         login_id VARCHAR(50) UNIQUE NOT NULL,
@@ -43,7 +40,6 @@ $tables = [
         updated_at {$dt} DEFAULT CURRENT_TIMESTAMP
     )",
     
-    // 飼い主
     "CREATE TABLE IF NOT EXISTS owners (
         id {$intPK},
         owner_code VARCHAR(20) UNIQUE,
@@ -56,13 +52,14 @@ $tables = [
         email VARCHAR(255) DEFAULT '',
         emergency_contact VARCHAR(100) DEFAULT '',
         emergency_phone VARCHAR(20) DEFAULT '',
+        line_user_id VARCHAR(100) DEFAULT '',
+        line_display_name VARCHAR(100) DEFAULT '',
         notes TEXT DEFAULT '',
         is_active INTEGER DEFAULT 1,
         created_at {$dt} DEFAULT CURRENT_TIMESTAMP,
         updated_at {$dt} DEFAULT CURRENT_TIMESTAMP
     )",
     
-    // 患畜
     "CREATE TABLE IF NOT EXISTS patients (
         id {$intPK},
         patient_code VARCHAR(20) UNIQUE,
@@ -91,7 +88,6 @@ $tables = [
         FOREIGN KEY (owner_id) REFERENCES owners(id)
     )",
     
-    // 診察記録
     "CREATE TABLE IF NOT EXISTS medical_records (
         id {$intPK},
         patient_id INTEGER NOT NULL,
@@ -120,7 +116,6 @@ $tables = [
         FOREIGN KEY (staff_id) REFERENCES staff(id)
     )",
     
-    // カルテ画像
     "CREATE TABLE IF NOT EXISTS record_images (
         id {$intPK},
         record_id INTEGER NOT NULL,
@@ -131,7 +126,6 @@ $tables = [
         FOREIGN KEY (record_id) REFERENCES medical_records(id) ON DELETE CASCADE
     )",
     
-    // 入院管理
     "CREATE TABLE IF NOT EXISTS admissions (
         id {$intPK},
         patient_id INTEGER NOT NULL,
@@ -154,7 +148,6 @@ $tables = [
         FOREIGN KEY (admitted_by) REFERENCES staff(id)
     )",
     
-    // 温度板
     "CREATE TABLE IF NOT EXISTS temperature_chart (
         id {$intPK},
         admission_id INTEGER NOT NULL,
@@ -193,7 +186,6 @@ $tables = [
         FOREIGN KEY (recorded_by) REFERENCES staff(id)
     )",
     
-    // オーダー
     "CREATE TABLE IF NOT EXISTS orders (
         id {$intPK},
         patient_id INTEGER NOT NULL,
@@ -222,7 +214,6 @@ $tables = [
         FOREIGN KEY (ordered_by) REFERENCES staff(id)
     )",
     
-    // 処方
     "CREATE TABLE IF NOT EXISTS prescriptions (
         id {$intPK},
         patient_id INTEGER NOT NULL,
@@ -244,7 +235,6 @@ $tables = [
         FOREIGN KEY (prescribed_by) REFERENCES staff(id)
     )",
     
-    // 病理検査
     "CREATE TABLE IF NOT EXISTS pathology (
         id {$intPK},
         patient_id INTEGER NOT NULL,
@@ -267,7 +257,6 @@ $tables = [
         FOREIGN KEY (patient_id) REFERENCES patients(id)
     )",
     
-    // 病理画像
     "CREATE TABLE IF NOT EXISTS pathology_images (
         id {$intPK},
         pathology_id INTEGER NOT NULL,
@@ -279,7 +268,6 @@ $tables = [
         FOREIGN KEY (pathology_id) REFERENCES pathology(id) ON DELETE CASCADE
     )",
     
-    // 検査結果
     "CREATE TABLE IF NOT EXISTS lab_results (
         id {$intPK},
         patient_id INTEGER NOT NULL,
@@ -298,7 +286,6 @@ $tables = [
         FOREIGN KEY (patient_id) REFERENCES patients(id)
     )",
     
-    // 看護記録
     "CREATE TABLE IF NOT EXISTS nursing_records (
         id {$intPK},
         patient_id INTEGER NOT NULL,
@@ -312,7 +299,6 @@ $tables = [
         FOREIGN KEY (nurse_id) REFERENCES staff(id)
     )",
     
-    // 看護タスク
     "CREATE TABLE IF NOT EXISTS nursing_tasks (
         id {$intPK},
         patient_id INTEGER NOT NULL,
@@ -331,7 +317,6 @@ $tables = [
         FOREIGN KEY (patient_id) REFERENCES patients(id)
     )",
     
-    // 会計
     "CREATE TABLE IF NOT EXISTS invoices (
         id {$intPK},
         invoice_number VARCHAR(30) UNIQUE,
@@ -353,7 +338,6 @@ $tables = [
         FOREIGN KEY (owner_id) REFERENCES owners(id)
     )",
     
-    // 会計明細
     "CREATE TABLE IF NOT EXISTS invoice_items (
         id {$intPK},
         invoice_id INTEGER NOT NULL,
@@ -368,7 +352,6 @@ $tables = [
         FOREIGN KEY (invoice_id) REFERENCES invoices(id) ON DELETE CASCADE
     )",
     
-    // 発行書類
     "CREATE TABLE IF NOT EXISTS issued_documents (
         id {$intPK},
         document_type VARCHAR(30) NOT NULL,
@@ -384,7 +367,6 @@ $tables = [
         FOREIGN KEY (issued_by) REFERENCES staff(id)
     )",
     
-    // 予約 (v2追加: updated_at)
     "CREATE TABLE IF NOT EXISTS appointments (
         id {$intPK},
         patient_id INTEGER NULL,
@@ -397,12 +379,13 @@ $tables = [
         status VARCHAR(20) DEFAULT 'scheduled',
         reason TEXT DEFAULT '',
         notes TEXT DEFAULT '',
+        checked_in_at {$dt} NULL,
+        reservation_token VARCHAR(64) DEFAULT '',
         created_at {$dt} DEFAULT CURRENT_TIMESTAMP,
         updated_at {$dt} DEFAULT NULL,
         FOREIGN KEY (patient_id) REFERENCES patients(id)
     )",
     
-    // 薬品マスタ
     "CREATE TABLE IF NOT EXISTS drug_master (
         id {$intPK},
         drug_code VARCHAR(30) DEFAULT '',
@@ -419,7 +402,6 @@ $tables = [
         created_at {$dt} DEFAULT CURRENT_TIMESTAMP
     )",
     
-    // 検査マスタ
     "CREATE TABLE IF NOT EXISTS test_master (
         id {$intPK},
         test_code VARCHAR(30) DEFAULT '',
@@ -434,7 +416,6 @@ $tables = [
         created_at {$dt} DEFAULT CURRENT_TIMESTAMP
     )",
     
-    // 処置マスタ
     "CREATE TABLE IF NOT EXISTS procedure_master (
         id {$intPK},
         procedure_code VARCHAR(30) DEFAULT '',
@@ -448,7 +429,6 @@ $tables = [
         created_at {$dt} DEFAULT CURRENT_TIMESTAMP
     )",
     
-    // 活動ログ
     "CREATE TABLE IF NOT EXISTS activity_log (
         id {$intPK},
         user_id INTEGER,
@@ -460,7 +440,6 @@ $tables = [
         created_at {$dt} DEFAULT CURRENT_TIMESTAMP
     )",
 
-    // 監査ログ (改ざん検知用)
     "CREATE TABLE IF NOT EXISTS audit_logs (
         id {$intPK},
         user_id INTEGER NOT NULL,
@@ -476,7 +455,6 @@ $tables = [
         created_at {$dt} DEFAULT CURRENT_TIMESTAMP
     )",
     
-    // ワクチン接種記録
     "CREATE TABLE IF NOT EXISTS vaccinations (
         id {$intPK},
         patient_id INTEGER NOT NULL,
@@ -495,7 +473,6 @@ $tables = [
         FOREIGN KEY (patient_id) REFERENCES patients(id)
     )",
     
-    // アレルギー記録
     "CREATE TABLE IF NOT EXISTS patient_allergies (
         id {$intPK},
         patient_id INTEGER NOT NULL,
@@ -508,7 +485,6 @@ $tables = [
         FOREIGN KEY (patient_id) REFERENCES patients(id)
     )",
 
-    // お知らせ・掲示板
     "CREATE TABLE IF NOT EXISTS notices (
         id {$intPK},
         title VARCHAR(255) NOT NULL,
@@ -522,7 +498,6 @@ $tables = [
         FOREIGN KEY (posted_by) REFERENCES staff(id)
     )",
 
-    // お知らせ既読管理
     "CREATE TABLE IF NOT EXISTS notice_reads (
         id {$intPK},
         notice_id INTEGER NOT NULL,
@@ -532,7 +507,6 @@ $tables = [
         FOREIGN KEY (user_id) REFERENCES staff(id)
     )",
 
-    // 施設設定テーブル
     "CREATE TABLE IF NOT EXISTS hospital_settings (
         setting_key VARCHAR(50) PRIMARY KEY,
         setting_value TEXT DEFAULT '',
@@ -540,16 +514,33 @@ $tables = [
     )"
 ];
 
-echo "データベースマイグレーション開始...\n";
+echo "VetCare Pro v2.0 - Database Migration\n";
+echo "=====================================\n";
 
 foreach ($tables as $sql) {
     try {
         $pdo->exec($sql);
         preg_match('/CREATE TABLE IF NOT EXISTS (\w+)/', $sql, $m);
-        echo "✓ テーブル作成: {$m[1]}\n";
+        echo "OK: {$m[1]}\n";
     } catch (PDOException $e) {
-        echo "✗ エラー: {$e->getMessage()}\n";
+        echo "ERROR: {$e->getMessage()}\n";
     }
 }
 
-echo "\nマイグレーション完了\n";
+// Add new columns to existing tables (safe migration)
+$alterations = [
+    "ALTER TABLE owners ADD COLUMN line_user_id VARCHAR(100) DEFAULT ''",
+    "ALTER TABLE owners ADD COLUMN line_display_name VARCHAR(100) DEFAULT ''",
+    "ALTER TABLE appointments ADD COLUMN checked_in_at TEXT NULL",
+    "ALTER TABLE appointments ADD COLUMN reservation_token VARCHAR(64) DEFAULT ''",
+];
+
+foreach ($alterations as $sql) {
+    try {
+        $pdo->exec($sql);
+    } catch (PDOException $e) {
+        // Column already exists - safe to ignore
+    }
+}
+
+echo "\nMigration completed successfully.\n";

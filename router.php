@@ -4,6 +4,24 @@ $uri = $_SERVER['REQUEST_URI'];
 $path = parse_url($uri, PHP_URL_PATH);
 $file = __DIR__ . $path;
 
+// Handle /booking/ directory (and /booking/api requests)
+if (preg_match('#^/booking(/.*)?$#', $path)) {
+    $bookingFile = __DIR__ . '/booking/index.php';
+    if (is_file($bookingFile)) {
+        require $bookingFile;
+        return true;
+    }
+}
+
+// Handle /api/ direct access
+if (preg_match('#^/api/(\w+)\.php#', $path, $m)) {
+    $apiFile = __DIR__ . '/api/' . $m[1] . '.php';
+    if (is_file($apiFile)) {
+        require $apiFile;
+        return true;
+    }
+}
+
 // Serve static files directly
 if ($path !== '/' && is_file($file)) {
     $ext = strtolower(pathinfo($file, PATHINFO_EXTENSION));

@@ -1,0 +1,26 @@
+# VetCare Pro - Public Booking Access
+# This directory serves public booking pages only.
+# No access to EMR internal files.
+
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    
+    # Block access to parent directories
+    RewriteRule ^\.\./ - [F,L]
+    
+    # Route all requests through booking index
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteRule ^(.*)$ index.php [QSA,L]
+</IfModule>
+
+# Security headers
+<IfModule mod_headers.c>
+    Header set X-Content-Type-Options "nosniff"
+    Header set X-Frame-Options "DENY"
+    Header set X-XSS-Protection "1; mode=block"
+    Header set Referrer-Policy "no-referrer"
+</IfModule>
+
+# Prevent directory listing
+Options -Indexes
