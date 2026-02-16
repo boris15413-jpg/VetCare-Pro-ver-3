@@ -60,7 +60,7 @@ if ($insuranceEnabled) {
                 <div class="brand-icon"><i class="bi bi-heart-pulse-fill"></i></div>
                 <div>
                     <div class="brand-name"><?= h(APP_NAME) ?></div>
-                    <div class="brand-sub">Veterinary EMR</div>
+                    <div class="brand-sub">動物病院電子カルテ</div>
                 </div>
             </div>
         </div>
