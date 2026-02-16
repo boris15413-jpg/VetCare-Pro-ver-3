@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>機能詳細 - VetCare Pro</title>
+<meta name="description" content="VetCare Proの全機能を詳細に解説。予約・受付・カルテ・検査・会計・レセプト・管理機能など60以上の画面と機能。">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.2/font/bootstrap-icons.min.css" rel="stylesheet">
+<link href="assets/css/style.css" rel="stylesheet">
+</head>
+<body>
+
+<!-- Navbar -->
+<nav class="vc-navbar"><div class="vc-navbar-inner">
+  <a href="index.html" class="vc-logo"><div class="vc-logo-icon"><i class="bi bi-heart-pulse-fill"></i></div>VetCare <span>Pro</span></a>
+  <button class="vc-hamburger" aria-label="Menu"><span></span><span></span><span></span></button>
+  <div class="vc-nav">
+    <a href="index.html">Home</a>
+    <a href="features.html" class="active">機能詳細</a>
+    <a href="install.html">導入ガイド</a>
+    <a href="customize.html">カスタマイズ</a>
+    <a href="https://github.com/boris15413-jpg/VetCare-Pro-ver-3" target="_blank" class="vc-nav-cta"><i class="bi bi-github"></i> GitHub</a>
+  </div>
+</div></nav>
+
+<!-- Hero -->
+<section class="vc-page-hero">
+  <div class="vc-breadcrumb"><a href="index.html">Home</a> <span>/</span> <span>機能詳細</span></div>
+  <h1>全機能の詳細ガイド</h1>
+  <p>60以上の画面・機能を網羅的に解説します</p>
+</section>
+
+<div class="vc-section vc-section-sm">
+<div class="vc-toc-layout">
+
+<!-- TOC Sidebar -->
+<nav class="vc-toc">
+  <h4>目次</h4>
+  <a href="#booking">Web予約システム</a>
+  <a href="#reception">受付・待合管理</a>
+  <a href="#emr">電子カルテ (SOAP)</a>
+  <a href="#patients">患者・飼い主管理</a>
+  <a href="#lab">検査結果管理</a>
+  <a href="#orders">オーダー管理</a>
+  <a href="#accounting">会計・請求</a>
+  <a href="#insurance">保険・レセプト</a>
+  <a href="#documents">書類・印刷</a>
+  <a href="#admin">管理機能</a>
+  <a href="#security">セキュリティ</a>
+  <a href="#api">API・拡張</a>
+</nav>
+
+<!-- Main Content -->
+<div class="vc-toc-main">
+
+<!-- ===== Web予約 ===== -->
+<div class="vc-feature-block" id="booking">
+  <h3><div class="fb-icon" style="background:var(--vc-primary-50);color:var(--vc-primary);"><i class="bi bi-calendar-check"></i></div>Web予約システム</h3>
+  <p style="color:var(--vc-gray-600);margin-bottom:20px;">
+    飼い主がスマートフォンやPCから24時間いつでも予約できるシステムです。
+    EMRとは<strong>独立した公開ページ</strong>（<code>/booking/</code>）として分離されており、セキュリティが確保されています。
+  </p>
+
+  <h4 style="font-weight:700;font-size:0.95rem;margin:20px 0 12px;"><i class="bi bi-globe me-1" style="color:var(--vc-primary);"></i>公開予約ページ（飼い主向け）</h4>
+  <ul class="vc-feature-list">
+    <li><strong>3ステップ予約フロー</strong> - 日時選択 → 情報入力 → 確認・送信の直感的なウィザード形式</li>
+    <li><strong>リアルタイム枠表示</strong> - 各時間枠の残数をリアルタイムで表示（例:「残2枠」）。満席枠は赤色で表示され選択不可</li>
+    <li><strong>午前/午後分割表示</strong> - 昼休み時間を自動判定し、午前・午後に分けて時間枠を表示</li>
+    <li><strong>担当医師表示</strong> - その日のシフトに基づき、勤務中の医師をアバター付きで表示。希望医師の選択も可能</li>
+    <li><strong>月間カレンダー</strong> - 空き状況を5段階で色分け表示（空き/やや混雑/混雑/満席/休診）</li>
+    <li><strong>休診日の自動判定</strong> - 曜日ベースの定休日 + 臨時休診日の両方に対応。休診日は選択不可</li>
+    <li><strong>飼い主情報入力</strong> - 名前（必須）、電話番号（必須）、メール、住所の入力欄</li>
+    <li><strong>ペット情報入力</strong> - ペット名、動物種（犬・猫・ウサギなど14種）、年齢</li>
+    <li><strong>初診/再診切替</strong> - トグルスイッチで初診モードをON。品種・性別の追加入力欄が展開</li>
+    <li><strong>新患自動登録</strong> - 初診モードで予約すると、飼い主とペットの情報がカルテに自動登録される</li>
+    <li><strong>来院理由選択</strong> - 一般診察/再診/ワクチン/健康診断/手術/トリミング/緊急 から選択</li>
+    <li><strong>確認画面</strong> - 予約内容を一覧で確認してから送信。誤入力を防止</li>
+    <li><strong>完了画面</strong> - 予約番号（トークン）を表示。来院時のお願い事項も表示</li>
+    <li><strong>レスポンシブデザイン</strong> - スマートフォン・タブレット・PCすべてに最適化</li>
+    <li><strong>予約無効時の表示</strong> - オンライン予約がOFFの場合、電話番号付きの案内を表示</li>
+    <li><strong>予約優先モード</strong> - 有効時、「予約優先制」の注意書きを自動表示</li>
+  </ul>
+
+  <h4 style="font-weight:700;font-size:0.95rem;margin:20px 0 12px;"><i class="bi bi-sliders me-1" style="color:var(--vc-primary);"></i>予約設定（管理者向け）</h4>
+  <ul class="vc-feature-list">
+    <li><strong>診療開始/終了時間</strong> - 例: 09:00〜18:00</li>
+    <li><strong>予約間隔</strong> - 15分/20分/30分/60分から選択</li>
+    <li><strong>1枠あたり最大予約数</strong> - 1〜20まで設定可能（デフォルト: 3）</li>
+    <li><strong>昼休み時間</strong> - 開始・終了を個別に設定（デフォルト: 12:00〜13:00）</li>
+    <li><strong>予約受付日数</strong> - 何日先まで予約を受け付けるか（デフォルト: 60日）</li>
+    <li><strong>定休日設定</strong> - 曜日ベースの定休日を複数選択可能</li>
+    <li><strong>臨時休診日</strong> - 個別の日付を指定して休診にできる</li>
+    <li><strong>ウェルカムメッセージ</strong> - 予約ページ上部に表示する案内文</li>
+    <li><strong>注意事項メッセージ</strong> - 時間選択エリアの下に黄色い注意枠で表示</li>
+    <li><strong>オンライン予約ON/OFF</strong> - 設定画面からワンクリックで有効/無効を切替</li>
+    <li><strong>新患登録ON/OFF</strong> - 初診者がオンラインで飼い主・ペットを登録できるかを制御</li>
+    <li><strong>予約優先モードON/OFF</strong> - 予約者を優先案内する旨の表示切替</li>
+  </ul>
+
+  <h4 style="font-weight:700;font-size:0.95rem;margin:20px 0 12px;"><i class="bi bi-gear me-1" style="color:var(--vc-primary);"></i>予約API（内部）</h4>
+  <ul class="vc-feature-list">
+    <li><code>GET /api/booking.php?action=get_slots&date=YYYY-MM-DD</code> - 指定日の全スロット情報を取得</li>
+    <li><code>GET /api/booking.php?action=get_doctors&date=YYYY-MM-DD</code> - 指定日の担当医師一覧を取得</li>
+    <li><code>GET /api/booking.php?action=get_month_availability&year=YYYY&month=MM</code> - 月間の空き状況</li>
+    <li><code>POST /api/booking.php?action=submit_booking</code> - 予約の送信（JSON形式）</li>
+  </ul>
+</div>
+
+<!-- ===== 受付 ===== -->
+<div class="vc-feature-block" id="reception">
+  <h3><div class="fb-icon" style="background:#ecfdf5;color:var(--vc-success);"><i class="bi bi-door-open"></i></div>受付・待合管理</h3>
+  <p style="color:var(--vc-gray-600);margin-bottom:20px;">来院された患者の受付処理と、待合室向けの表示画面を管理します。</p>
+  <ul class="vc-feature-list">
+    <li><strong>当日予約一覧</strong> - 本日の予約を時間順に一覧表示。ステータス管理（予約済→受付済→診察中→完了）</li>
+    <li><strong>チェックイン処理</strong> - ワンクリックで受付完了。受付時刻を自動記録</li>
+    <li><strong>番号発行モード</strong> - プライバシー配慮のため、名前の代わりに受付番号を発行。番号モード/名前モードを設定画面で切替</li>
+    <li><strong>待合表示画面</strong> - 待合室のモニター用画面。現在呼び出し中の番号/名前を大きく表示</li>
+    <li><strong>会計表示画面</strong> - 会計待ちの患者向け表示画面</li>
+    <li><strong>飛び込み来院対応</strong> - 予約なしの来院もその場で受付可能</li>
+    <li><strong>予約ステータス</strong> - 予約済/受付済/診察中/完了/キャンセル/無断キャンセル の6種類</li>
+  </ul>
+</div>
+
+<!-- ===== 電子カルテ ===== -->
+<div class="vc-feature-block" id="emr">
+  <h3><div class="fb-icon" style="background:#faf5ff;color:var(--vc-violet);"><i class="bi bi-clipboard2-pulse"></i></div>電子カルテ (SOAP)</h3>
+  <p style="color:var(--vc-gray-600);margin-bottom:20px;">診療記録の中核機能。SOAP形式で構造化された記録が作成できます。</p>
+  <ul class="vc-feature-list">
+    <li><strong>SOAP形式記録</strong> - S（主訴）、O（所見）、A（評価）、P（計画）の4フィールドで構造化入力</li>
+    <li><strong>カルテテンプレート</strong> - よく使う記録パターンをテンプレートとして登録可能。SOAP各欄にデフォルト値を設定</li>
+    <li><strong>テンプレートカテゴリ</strong> - テンプレートをカテゴリ別（一般診察/皮膚科/予防/手術等）に分類</li>
+    <li><strong>診療記録一覧</strong> - 患者ごとの過去の診療記録を時系列で表示。検索・フィルタリング対応</li>
+    <li><strong>バイタルサイン記録</strong> - 体温、脈拍、呼吸数、体重の記録</li>
+    <li><strong>体温チャート</strong> - 入院患者の体温推移をグラフ表示</li>
+    <li><strong>オーダー連携</strong> - カルテ画面から直接オーダー（投薬・検査・処置）を発行可能</li>
+    <li><strong>入院管理</strong> - 入院/退院の管理。入院中の経過記録。転院・死亡記録</li>
+    <li><strong>看護記録</strong> - 看護師による観察記録。バイタル・投薬・処置の記録</li>
+    <li><strong>同意書フォーム</strong> - 手術等の同意書をシステム上で作成・印刷</li>
+    <li><strong>紹介状フォーム</strong> - 転院時の紹介状を患者データから自動生成</li>
+    <li><strong>退院サマリー</strong> - 入院患者の退院時サマリーを作成</li>
+  </ul>
+</div>
+
+<!-- ===== 患者管理 ===== -->
+<div class="vc-feature-block" id="patients">
+  <h3><div class="fb-icon" style="background:#fdf2f8;color:#db2777;"><i class="bi bi-heart"></i></div>患者・飼い主管理</h3>
+  <p style="color:var(--vc-gray-600);margin-bottom:20px;">患畜（ペット）と飼い主の情報を管理します。複数ペットの一元管理に対応。</p>
+
+  <h4 style="font-weight:700;font-size:0.95rem;margin:20px 0 12px;">患畜（ペット）管理</h4>
+  <ul class="vc-feature-list">
+    <li><strong>基本情報</strong> - 患者ID（自動採番）、名前、動物種、品種、性別、毛色、生年月日、マイクロチップID</li>
+    <li><strong>対応動物種</strong> - 犬/猫/ウサギ/ハムスター/鳥/フェレット/カメ/モルモット/チンチラ/ハリネズミ/ヘビ/トカゲ/魚/その他（14種）</li>
+    <li><strong>体重推移グラフ</strong> - 定期計測した体重をグラフで可視化。増減傾向の確認</li>
+    <li><strong>患者画像管理</strong> - 写真（外観、患部、検査画像等）をアップロード・管理</li>
+    <li><strong>ワクチン履歴</strong> - 接種日、ワクチン種類、次回接種予定日の管理</li>
+    <li><strong>アレルギー・注意事項</strong> - カルテ画面上に常時表示される注意メモ</li>
+    <li><strong>患者詳細画面</strong> - 1画面で全情報（基本情報・カルテ・検査・画像・体重）を俯瞰</li>
+    <li><strong>患者検索</strong> - 名前、ID、飼い主名、種別での絞り込み検索</li>
+  </ul>
+
+  <h4 style="font-weight:700;font-size:0.95rem;margin:20px 0 12px;">飼い主管理</h4>
+  <ul class="vc-feature-list">
+    <li><strong>基本情報</strong> - 飼い主ID（自動採番）、名前、フリガナ、電話番号、メール、住所</li>
+    <li><strong>複数ペット紐付け</strong> - 1人の飼い主に複数のペットを紐付け。飼い主画面からペット一覧を確認</li>
+    <li><strong>飼い主検索</strong> - 名前、電話番号、メールでの検索</li>
+    <li><strong>飼い主一覧</strong> - 全飼い主の一覧表示。ペット数の表示</li>
+  </ul>
+</div>
+
+<!-- ===== 検査 ===== -->
+<div class="vc-feature-block" id="lab">
+  <h3><div class="fb-icon" style="background:#fff7ed;color:#ea580c;"><i class="bi bi-activity"></i></div>検査結果管理</h3>
+  <p style="color:var(--vc-gray-600);margin-bottom:20px;">血液検査をはじめとする各種検査結果の記録・管理・印刷機能。</p>
+  <ul class="vc-feature-list">
+    <li><strong>検査結果一覧</strong> - 患者ごとに全検査結果を時系列で表示。カテゴリ別のフィルタリング</li>
+    <li><strong>検査カテゴリ</strong> - 血液検査（CBC/生化学）、尿検査、糞便検査、画像診断、その他に分類</li>
+    <li><strong>基準値判定</strong> - 検査項目ごとに基準値（下限/上限）を設定。範囲外の値は「異常」として自動ハイライト</li>
+    <li><strong>異常値表示</strong> - 高値は赤色↑、低値は青色↓で視覚的に判別</li>
+    <li><strong>CSV一括インポート</strong> - 検査機器から出力されたCSVファイルを一括取り込み。カラムマッピング機能付き</li>
+    <li><strong>検査結果印刷</strong> - A4サイズに最適化された印刷レイアウト。1ページに収まるよう自動調整</li>
+    <li><strong>病理記録</strong> - サンプルタイプ、倍率、染色法を記録。病理画像の添付</li>
+    <li><strong>検査マスタ</strong> - 検査項目名、基準値、単位などのマスタデータを管理</li>
+  </ul>
+</div>
+
+<!-- ===== オーダー ===== -->
+<div class="vc-feature-block" id="orders">
+  <h3><div class="fb-icon" style="background:#f0fdfa;color:#0d9488;"><i class="bi bi-card-checklist"></i></div>オーダー管理</h3>
+  <p style="color:var(--vc-gray-600);margin-bottom:20px;">投薬・検査・処置などのオーダーを管理します。</p>
+  <ul class="vc-feature-list">
+    <li><strong>オーダー作成</strong> - 投薬/検査/処置/その他のカテゴリでオーダーを発行</li>
+    <li><strong>ステータス管理</strong> - 未実施/実施中/完了/キャンセル のステータスを管理</li>
+    <li><strong>オーダー一覧</strong> - 日付・ステータス・カテゴリでフィルタリング</li>
+    <li><strong>カルテ連携</strong> - 診療記録からワンクリックでオーダー発行</li>
+    <li><strong>看護タスク連携</strong> - オーダーを看護タスクとして看護師に通知</li>
+    <li><strong>薬品マスタ連携</strong> - 投薬オーダー時に薬品マスタから選択。在庫自動差引</li>
+    <li><strong>在庫アラート</strong> - 在庫が最小数量を下回った薬品をアラート表示</li>
+    <li><strong>処方箋印刷</strong> - 投薬オーダーから薬袋・処方箋を印刷</li>
+  </ul>
+</div>
+
+<!-- ===== 会計 ===== -->
+<div class="vc-feature-block" id="accounting">
+  <h3><div class="fb-icon" style="background:var(--vc-danger-50);color:var(--vc-danger);"><i class="bi bi-receipt-cutoff"></i></div>会計・請求</h3>
+  <div class="vc-disclaimer vc-disclaimer-danger" style="margin-bottom:20px;">
+    <h3><i class="bi bi-exclamation-triangle-fill" style="color:var(--vc-danger);"></i> 注意</h3>
+    <p>会計機能の計算ロジックは<strong>正確性が保証されていません</strong>。消費税の端数処理、保険適用時の計算などに誤りがある可能性があります。
+    実運用前に必ず計算結果を検証してください。修正方法は<a href="customize.html#accounting-fix">カスタマイズガイド</a>をご参照ください。</p>
+  </div>
+  <ul class="vc-feature-list">
+    <li><strong>請求書作成</strong> - 診療内容から請求書を自動生成。明細行の追加・編集・削除</li>
+    <li><strong>消費税計算</strong> - 設定画面で税率を設定（デフォルト10%）。税込/税抜の切替</li>
+    <li><strong>領収書印刷</strong> - A4レイアウトの領収書を印刷</li>
+    <li><strong>請求書印刷</strong> - 詳細な明細付き請求書を印刷</li>
+    <li><strong>見積書</strong> - 手術等の事前見積書を作成・印刷</li>
+    <li><strong>売上統計</strong> - 日別/月別の売上集計。グラフ表示</li>
+  </ul>
+</div>
+
+<!-- ===== 保険 ===== -->
+<div class="vc-feature-block" id="insurance">
+  <h3><div class="fb-icon" style="background:var(--vc-warning-50);color:#92400e;"><i class="bi bi-shield-plus"></i></div>保険・レセプト</h3>
+  <div class="vc-disclaimer vc-disclaimer-danger" style="margin-bottom:20px;">
+    <h3><i class="bi bi-exclamation-triangle-fill" style="color:var(--vc-danger);"></i> 注意</h3>
+    <p>レセプト機能は<strong>形式的なもの</strong>であり、実際の動物保険のレセプト様式に準拠していません。
+    保険点数・計算ロジックはAIが推測で実装したものです。実際の保険請求には使用できません。</p>
+  </div>
+  <ul class="vc-feature-list">
+    <li><strong>保険会社マスタ</strong> - 保険会社名、保険種別、連絡先の管理</li>
+    <li><strong>保険請求管理</strong> - 請求作成、ステータス管理（作成/送信/承認/却下/支払済）</li>
+    <li><strong>レセプト出力</strong> - 印刷用レセプトの出力（形式的）</li>
+    <li><strong>保険請求エクスポート</strong> - CSV形式での一括エクスポート</li>
+    <li><strong>診断名マスタ</strong> - 傷病名の標準マスタ。コード付き</li>
+    <li><strong>機能ON/OFF</strong> - 設定画面から保険関連機能全体を無効化可能</li>
+  </ul>
+</div>
+
+<!-- ===== 書類 ===== -->
+<div class="vc-feature-block" id="documents">
+  <h3><div class="fb-icon" style="background:#f0f9ff;color:#0369a1;"><i class="bi bi-printer"></i></div>書類・印刷</h3>
+  <ul class="vc-feature-list">
+    <li><strong>請求書/領収書</strong> - 明細付きの印刷。ロゴ・印影の挿入に対応</li>
+    <li><strong>検査結果報告書</strong> - A4に収まるレイアウトの検査結果印刷</li>
+    <li><strong>処方箋/薬袋</strong> - 投薬内容の印刷</li>
+    <li><strong>同意書</strong> - 手術等の同意書フォーム</li>
+    <li><strong>紹介状</strong> - 転院用の紹介状</li>
+    <li><strong>退院サマリー</strong> - 入院患者の退院時サマリー</li>
+    <li><strong>レセプト</strong> - 保険請求用レセプト（形式的）</li>
+    <li><strong>見積書</strong> - 治療費見積書</li>
+    <li>すべての書類は<strong>印刷最適化</strong>済み。画面上のメニュー等は印刷時に非表示</li>
+  </ul>
+</div>
+
+<!-- ===== 管理 ===== -->
+<div class="vc-feature-block" id="admin">
+  <h3><div class="fb-icon" style="background:var(--vc-primary-50);color:var(--vc-primary);"><i class="bi bi-gear"></i></div>管理機能</h3>
+
+  <h4 style="font-weight:700;font-size:0.95rem;margin:20px 0 12px;">スタッフ管理</h4>
+  <ul class="vc-feature-list">
+    <li><strong>アカウント管理</strong> - スタッフの作成/編集/無効化。ログインID・パスワード管理</li>
+    <li><strong>権限ロール</strong> - 管理者/獣医師/看護師/受付/検査技師 の5ロール。ロール別のアクセス制御</li>
+    <li><strong>シフト管理</strong> - 日別のシフト登録。曜日ベースのテンプレート設定</li>
+    <li><strong>休日管理</strong> - 曜日定休 + 臨時休診日の管理</li>
+    <li><strong>プロフィール</strong> - 各スタッフが自分のプロフィール・パスワードを変更可能</li>
+  </ul>
+
+  <h4 style="font-weight:700;font-size:0.95rem;margin:20px 0 12px;">マスタ管理</h4>
+  <ul class="vc-feature-list">
+    <li><strong>薬品マスタ</strong> - 薬品コード、名称、一般名、カテゴリ、単位、単価、在庫数、最小在庫数</li>
+    <li><strong>検査マスタ</strong> - 検査コード、名称、カテゴリ、基準値（下限/上限）、単位</li>
+    <li><strong>処置マスタ</strong> - 処置コード、名称、カテゴリ、単価</li>
+    <li><strong>診断名マスタ</strong> - 傷病名コード、名称、カテゴリ</li>
+    <li><strong>保険会社マスタ</strong> - 保険会社の情報管理</li>
+  </ul>
+
+  <h4 style="font-weight:700;font-size:0.95rem;margin:20px 0 12px;">施設設定</h4>
+  <ul class="vc-feature-list">
+    <li><strong>病院基本情報</strong> - 名称、住所、電話、FAX、メール、院長名、開設許可番号</li>
+    <li><strong>ロゴ・印影</strong> - 病院ロゴと角印の画像をアップロード。書類への自動挿入</li>
+    <li><strong>診療時間</strong> - 平日/土曜/日祝の診療時間設定</li>
+    <li><strong>予約設定</strong> - 全予約パラメータの設定（前述）</li>
+    <li><strong>機能トグル</strong> - 保険機能/予約機能/新患登録/予約優先モードの個別ON/OFF</li>
+    <li><strong>表示モード</strong> - 待合表示を「名前表示」or「番号表示」で切替</li>
+    <li><strong>テンプレート管理</strong> - カルテテンプレートの作成・編集・削除</li>
+    <li><strong>バックアップ</strong> - データベースの自動日次バックアップ。保持日数の設定</li>
+    <li><strong>システム情報</strong> - PHPバージョン、DB種別、DBサイズ、タイムゾーンなどの表示</li>
+  </ul>
+
+  <h4 style="font-weight:700;font-size:0.95rem;margin:20px 0 12px;">その他</h4>
+  <ul class="vc-feature-list">
+    <li><strong>ダッシュボード</strong> - 当日の予約数、入院数、売上、タスク数を一覧表示。直近の予約・通知もカード表示</li>
+    <li><strong>お知らせ機能</strong> - スタッフ間の掲示板。お知らせの作成・閲覧</li>
+    <li><strong>統計レポート</strong> - 売上推移、来院数、動物種別構成比などの統計</li>
+    <li><strong>LINE通知連携</strong> - LINE Messaging APIで予約通知・リマインダー送信</li>
+    <li><strong>プラグインシステム</strong> - 独自プラグインの開発・管理が可能</li>
+  </ul>
+</div>
+
+<!-- ===== セキュリティ ===== -->
+<div class="vc-feature-block" id="security">
+  <h3><div class="fb-icon" style="background:var(--vc-danger-50);color:var(--vc-danger);"><i class="bi bi-shield-lock"></i></div>セキュリティ</h3>
+  <ul class="vc-feature-list">
+    <li><strong>認証システム</strong> - セッションベースのログイン認証。パスワードハッシュ化（bcrypt）</li>
+    <li><strong>CSRF対策</strong> - すべてのフォーム送信にCSRFトークンを付与</li>
+    <li><strong>IPホワイトリスト</strong> - EMRへのアクセスを特定のIPアドレスに制限。CIDR表記、ワイルドカードに対応</li>
+    <li><strong>LAN内自動許可</strong> - ローカルネットワーク（192.168.x.x / 10.x.x.x / 172.16-31.x.x）からのアクセスは常に許可</li>
+    <li><strong>外部予約ページ分離</strong> - <code>/booking/</code>ディレクトリは認証なしで公開。EMRの内部機能にはアクセス不可</li>
+    <li><strong>外部アクセス制限</strong> - EMRをドキュメントルートに配置した場合、特定パス以外のアクセスをブロック可能</li>
+    <li><strong>セキュリティヘッダー</strong> - X-Frame-Options, X-Content-Type-Options, X-XSS-Protection を自動付与</li>
+    <li><strong>ログイン試行制限</strong> - ブルートフォース攻撃対策（レートリミット）</li>
+    <li><strong>.htaccess保護</strong> - data/、backups/ ディレクトリへの直接アクセスをブロック</li>
+    <li><strong>HTMLエスケープ</strong> - すべての出力に <code>h()</code> 関数でエスケープ処理（XSS対策）</li>
+  </ul>
+</div>
+
+<!-- ===== API ===== -->
+<div class="vc-feature-block" id="api">
+  <h3><div class="fb-icon" style="background:#ecfdf5;color:var(--vc-success);"><i class="bi bi-code-slash"></i></div>API・拡張性</h3>
+  <ul class="vc-feature-list">
+    <li><strong>予約API</strong> - 公開APIとして予約の取得・送信が可能（前述）</li>
+    <li><strong>プラグインシステム</strong> - <code>/plugins/</code>ディレクトリにPHPファイルを配置するだけで機能追加</li>
+    <li><strong>フック機構</strong> - <code>do_action()</code> / <code>apply_filter()</code> によるWordPress風のフック</li>
+    <li><strong>ページルーティング</strong> - 連想配列ベースの簡易ルーティング。プラグインからルートを追加可能</li>
+    <li><strong>テンプレートエンジン</strong> - 簡易テンプレートエンジン搭載。レイアウト分離</li>
+    <li><strong>データベース抽象化</strong> - PDO経由でSQLite / MySQL切替対応</li>
+  </ul>
+</div>
+
+<!-- Data Schema -->
+<div class="vc-feature-block" id="schema">
+  <h3><div class="fb-icon" style="background:var(--vc-gray-100);color:var(--vc-gray-700);"><i class="bi bi-diagram-3"></i></div>データベース構造（主要テーブル）</h3>
+  <div class="vc-table-wrap">
+    <table class="vc-table">
+      <thead><tr><th>テーブル名</th><th>用途</th><th>主なカラム</th></tr></thead>
+      <tbody>
+        <tr><td><code>staff</code></td><td>スタッフ</td><td>login_id, name, role, password_hash, is_active</td></tr>
+        <tr><td><code>patients</code></td><td>患畜</td><td>patient_code, owner_id, name, species, breed, sex, birth_date</td></tr>
+        <tr><td><code>owners</code></td><td>飼い主</td><td>owner_code, name, phone, email, address</td></tr>
+        <tr><td><code>medical_records</code></td><td>診療記録</td><td>patient_id, staff_id, subjective, objective, assessment, plan</td></tr>
+        <tr><td><code>appointments</code></td><td>予約</td><td>patient_id, appointment_date, appointment_time, status, reservation_token</td></tr>
+        <tr><td><code>orders</code></td><td>オーダー</td><td>patient_id, record_id, category, item_name, quantity, status</td></tr>
+        <tr><td><code>invoices</code></td><td>請求書</td><td>patient_id, subtotal, tax_amount, total, status</td></tr>
+        <tr><td><code>lab_results</code></td><td>検査結果</td><td>patient_id, test_name, result_value, reference_low, reference_high, is_abnormal</td></tr>
+        <tr><td><code>drug_master</code></td><td>薬品マスタ</td><td>drug_code, drug_name, category, unit, unit_price, stock_quantity</td></tr>
+        <tr><td><code>settings</code></td><td>設定</td><td>setting_key, setting_value</td></tr>
+        <tr><td><code>staff_schedules</code></td><td>シフト</td><td>staff_id, schedule_date, start_time, end_time, schedule_type</td></tr>
+        <tr><td><code>closed_days</code></td><td>休診日</td><td>closed_date, reason</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+</div><!-- /.vc-toc-main -->
+</div><!-- /.vc-toc-layout -->
+</div><!-- /.vc-section -->
+
+<!-- Footer -->
+<footer class="vc-footer">
+  <div class="vc-footer-inner">
+    <div><h5><i class="bi bi-heart-pulse-fill me-2"></i>VetCare Pro</h5><p>オープンソースの動物病院向け電子カルテシステム。</p></div>
+    <div><h5>ドキュメント</h5><a href="index.html">トップページ</a><a href="features.html">機能詳細</a><a href="install.html">導入ガイド</a><a href="customize.html">カスタマイズ</a></div>
+    <div><h5>リンク</h5><a href="https://github.com/boris15413-jpg/VetCare-Pro-ver-3" target="_blank">GitHub</a><a href="https://github.com/boris15413-jpg/VetCare-Pro-ver-3/issues" target="_blank">Issue Tracker</a></div>
+    <div><h5>監修者</h5><a href="https://github.com/boris15413-jpg" target="_blank">boris (GitHub)</a></div>
+  </div>
+  <div class="vc-footer-bottom">
+    <span>&copy; 2025-2026 VetCare Pro. MIT License.</span>
+    <span>Built with <i class="bi bi-robot"></i> Claude AI</span>
+  </div>
+</footer>
+
+<script src="assets/js/main.js"></script>
+</body>
+</html>

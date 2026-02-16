@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>カスタマイズ・修正ガイド - VetCare Pro</title>
+<meta name="description" content="VetCare Proの会計計算、レセプト機能、検査基準値の修正方法を詳しく解説。コードの場所と具体的な修正手順。">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.2/font/bootstrap-icons.min.css" rel="stylesheet">
+<link href="assets/css/style.css" rel="stylesheet">
+</head>
+<body>
+
+<!-- Navbar -->
+<nav class="vc-navbar"><div class="vc-navbar-inner">
+  <a href="index.html" class="vc-logo"><div class="vc-logo-icon"><i class="bi bi-heart-pulse-fill"></i></div>VetCare <span>Pro</span></a>
+  <button class="vc-hamburger" aria-label="Menu"><span></span><span></span><span></span></button>
+  <div class="vc-nav">
+    <a href="index.html">Home</a>
+    <a href="features.html">機能詳細</a>
+    <a href="install.html">導入ガイド</a>
+    <a href="customize.html" class="active">カスタマイズ</a>
+    <a href="https://github.com/boris15413-jpg/VetCare-Pro-ver-3" target="_blank" class="vc-nav-cta"><i class="bi bi-github"></i> GitHub</a>
+  </div>
+</div></nav>
+
+<!-- Hero -->
+<section class="vc-page-hero">
+  <div class="vc-breadcrumb"><a href="index.html">Home</a> <span>/</span> <span>カスタマイズ・修正ガイド</span></div>
+  <h1>カスタマイズ・修正ガイド</h1>
+  <p>会計ロジック・レセプト・検査基準値の間違いを見つけて直す方法</p>
+</section>
+
+<div class="vc-section vc-section-sm">
+<div class="vc-toc-layout">
+
+<!-- TOC Sidebar -->
+<nav class="vc-toc">
+  <h4>目次</h4>
+  <a href="#overview">このガイドについて</a>
+  <a href="#structure">ファイル構造の理解</a>
+  <a href="#accounting-fix">会計・計算の修正</a>
+  <a href="#receipt-fix">レセプト機能の修正</a>
+  <a href="#lab-fix">検査基準値の修正</a>
+  <a href="#drug-fix">薬品マスタの修正</a>
+  <a href="#template-fix">テンプレートの修正</a>
+  <a href="#general-tips">修正の一般的なヒント</a>
+  <a href="#contribute">修正をプロジェクトに貢献</a>
+</nav>
+
+<!-- Main Content -->
+<div class="vc-toc-main">
+
+<!-- ===== Overview ===== -->
+<div class="vc-feature-block" id="overview">
+  <h3><div class="fb-icon" style="background:var(--vc-primary-50);color:var(--vc-primary);"><i class="bi bi-info-circle"></i></div>このガイドについて</h3>
+
+  <div class="vc-disclaimer vc-disclaimer-danger" style="margin-bottom:24px;">
+    <h3><i class="bi bi-exclamation-octagon-fill" style="color:var(--vc-danger);font-size:1.2rem;"></i> 重要な前提</h3>
+    <p>
+      VetCare Proの会計機能・レセプト機能・検査基準値等は、<strong>動物病院の実務経験がない</strong>監修者の指示のもと、
+      <strong>AIが推測で実装</strong>したものです。以下のような問題がある可能性があります：
+    </p>
+    <ul style="color:#7f1d1d;">
+      <li>消費税の端数処理方法が実際の慣行と異なる</li>
+      <li>保険適用時の計算ロジック（負担率の適用方法、免責金額の扱い等）が不正確</li>
+      <li>レセプトの様式・記載項目が実際の動物保険のレセプトと合致しない</li>
+      <li>検査基準値（血液検査の正常範囲等）が動物種・年齢に合っていない</li>
+      <li>薬品の用法用量・単価が実態と異なる</li>
+    </ul>
+    <p style="margin-top:12px;font-weight:700;">
+      このガイドは、これらの問題を<strong>ご自身で見つけて修正する方法</strong>を解説します。
+    </p>
+  </div>
+
+  <p style="font-size:0.92rem;color:var(--vc-gray-600);">
+    PHPの基本的な知識があれば、ほとんどの修正は可能です。PHPの経験がない方でも、
+    このガイドに沿って進めれば、基本的な修正作業ができるように構成しています。
+  </p>
+</div>
+
+<!-- ===== ファイル構造 ===== -->
+<div class="vc-feature-block" id="structure">
+  <h3><div class="fb-icon" style="background:#ecfdf5;color:var(--vc-success);"><i class="bi bi-folder2-open"></i></div>ファイル構造の理解</h3>
+  <p style="color:var(--vc-gray-600);margin-bottom:20px;">
+    修正する前に、プロジェクトのファイル構造を理解しましょう。修正が必要なファイルがどこにあるかが分かります。
+  </p>
+
+  <div class="vc-file-tree">
+VetCare-Pro-ver-3/
+<span class="dir">+-- pages/</span>                    <span class="code-comment"># 各画面のPHPファイル</span>
+<span class="file">|   +-- invoice_form.php</span>       <span class="highlight"># &lt;-- 会計フォーム（計算ロジック）</span>
+<span class="file">|   +-- invoice_print.php</span>      <span class="highlight"># &lt;-- 請求書・領収書の印刷</span>
+<span class="file">|   +-- invoices.php</span>           <span class="highlight"># &lt;-- 請求書一覧</span>
+<span class="file">|   +-- insurance_claim_form.php</span> <span class="highlight"># &lt;-- レセプト作成フォーム</span>
+<span class="file">|   +-- insurance_claims.php</span>   <span class="highlight"># &lt;-- レセプト一覧</span>
+<span class="file">|   +-- insurance_export.php</span>   <span class="highlight"># &lt;-- レセプトCSVエクスポート</span>
+<span class="file">|   +-- lab_results.php</span>        <span class="highlight"># &lt;-- 検査結果表示（基準値判定）</span>
+<span class="file">|   +-- medical_record.php</span>     <span class="code-comment"># カルテ画面</span>
+<span class="file">|   +-- patient_detail.php</span>     <span class="code-comment"># 患者詳細画面</span>
+<span class="file">|   +-- settings.php</span>           <span class="code-comment"># 設定画面</span>
+<span class="file">|   +-- ...</span>
+<span class="dir">+-- api/</span>                       <span class="code-comment"># API ファイル</span>
+<span class="file">|   +-- insurance_policies.php</span> <span class="highlight"># &lt;-- 保険情報API</span>
+<span class="dir">+-- includes/</span>                  <span class="code-comment"># 共通ファイル</span>
+<span class="file">|   +-- helpers.php</span>            <span class="highlight"># &lt;-- 共通関数（生成関数等）</span>
+<span class="dir">+-- migrations/</span>                <span class="code-comment"># DBマイグレーション</span>
+<span class="file">|   +-- 001_create_tables.php</span>  <span class="highlight"># &lt;-- テーブル定義（基準値のデフォルト）</span>
+<span class="file">|   +-- 002_seed_data.php</span>      <span class="highlight"># &lt;-- サンプルデータ（薬品・検査マスタ）</span>
+<span class="dir">+-- data/</span>                      <span class="code-comment"># データベースファイル</span>
+<span class="file">|   +-- vetcare.db</span>             <span class="code-comment"># SQLiteデータベース（本体）</span>
+<span class="file">+-- config.php</span>                 <span class="code-comment"># システム設定</span>
+  </div>
+</div>
+
+<!-- ===== 会計・計算の修正 ===== -->
+<div class="vc-feature-block" id="accounting-fix">
+  <h3><div class="fb-icon" style="background:var(--vc-danger-50);color:var(--vc-danger);"><i class="bi bi-calculator"></i></div>会計・計算ロジックの修正</h3>
+
+  <div class="vc-disclaimer vc-disclaimer-warning" style="margin-bottom:24px;">
+    <h3><i class="bi bi-exclamation-triangle-fill" style="color:var(--vc-warning);"></i> 修正が必要な可能性が高い箇所</h3>
+    <p>会計機能は、動物病院の会計実務を知らないまま作られています。以下の問題がある可能性が高いです。</p>
+  </div>
+
+  <!-- Issue 1: Tax rounding -->
+  <h4 style="font-weight:700;font-size:1rem;margin:28px 0 12px;color:var(--vc-danger);">問題1：消費税の端数処理</h4>
+  <p style="font-size:0.92rem;color:var(--vc-gray-600);margin-bottom:12px;">
+    <strong>対象ファイル：</strong><code>pages/invoice_form.php</code> 74行目付近<br>
+    <strong>現在の実装：</strong>消費税を <code>round()</code>（四捨五入）で計算しています。
+  </p>
+  <pre><code><span class="code-comment">// 現在のコード（invoice_form.php 74行目付近）</span>
+<span class="code-var">$tax</span> = <span class="code-func">round</span>(<span class="code-var">$subtotal</span> * (<span class="code-var">$tax_rate</span> / <span class="code-number">100</span>));  <span class="code-comment">// 四捨五入</span></code></pre>
+  <p style="font-size:0.92rem;color:var(--vc-gray-600);margin-bottom:12px;">
+    <strong>潜在的な問題：</strong>動物病院の会計では<strong>切り捨て</strong>が一般的かもしれません（人間の医療では切り捨てが標準）。
+    ここがどうあるべきかは、実際の動物病院の会計実務に基づいて判断してください。
+  </p>
+  <pre><code><span class="code-comment">// 修正例1：切り捨てに変更</span>
+<span class="code-var">$tax</span> = <span class="code-func">floor</span>(<span class="code-var">$subtotal</span> * (<span class="code-var">$tax_rate</span> / <span class="code-number">100</span>));  <span class="code-comment">// 切り捨て</span>
+
+<span class="code-comment">// 修正例2：切り上げに変更</span>
+<span class="code-var">$tax</span> = <span class="code-func">ceil</span>(<span class="code-var">$subtotal</span> * (<span class="code-var">$tax_rate</span> / <span class="code-number">100</span>));   <span class="code-comment">// 切り上げ</span>
+
+<span class="code-comment">// 修正例3：1円未満を四捨五入（現状のまま）</span>
+<span class="code-var">$tax</span> = <span class="code-func">round</span>(<span class="code-var">$subtotal</span> * (<span class="code-var">$tax_rate</span> / <span class="code-number">100</span>));  <span class="code-comment">// 四捨五入</span></code></pre>
+
+  <div class="vc-info-box vc-info-box-tip">
+    <div class="info-icon"><i class="bi bi-lightbulb-fill"></i></div>
+    <div>
+      <strong>修正のヒント：</strong>
+      同様の消費税計算は <strong>45行目の明細行計算</strong>（<code>$amt = round($qty * $price);</code>）にもあります。
+      行単位の端数処理と合計後の端数処理が一貫しているか確認してください。
+    </div>
+  </div>
+
+  <!-- Issue 2: Insurance calculation -->
+  <h4 style="font-weight:700;font-size:1rem;margin:28px 0 12px;color:var(--vc-danger);">問題2：保険適用時の計算</h4>
+  <p style="font-size:0.92rem;color:var(--vc-gray-600);margin-bottom:12px;">
+    <strong>対象ファイル：</strong><code>pages/invoice_form.php</code> 75-77行目<br>
+    <strong>現在の実装：</strong>合計 = 小計 + 消費税 - 割引 - 保険負担
+  </p>
+  <pre><code><span class="code-comment">// 現在のコード</span>
+<span class="code-var">$discount</span> = (<span class="code-keyword">int</span>)(<span class="code-var">$_POST</span>[<span class="code-string">'discount'</span>] ?? <span class="code-number">0</span>);
+<span class="code-var">$insurance</span> = (<span class="code-keyword">int</span>)(<span class="code-var">$_POST</span>[<span class="code-string">'insurance_covered'</span>] ?? <span class="code-number">0</span>);
+<span class="code-var">$total</span> = <span class="code-var">$subtotal</span> + <span class="code-var">$tax</span> - <span class="code-var">$discount</span> - <span class="code-var">$insurance</span>;</code></pre>
+  <p style="font-size:0.92rem;color:var(--vc-gray-600);margin-bottom:12px;">
+    <strong>潜在的な問題：</strong>
+  </p>
+  <ul style="font-size:0.88rem;color:var(--vc-gray-600);line-height:2;padding-left:20px;">
+    <li>保険が負担するのは「税込額に対する割合」なのか「税抜額に対する割合」なのか不明瞭</li>
+    <li>保険の免責金額（deductible）がこの計算に含まれていない</li>
+    <li>割引を適用するタイミング（保険計算前 or 後）が正しいか不明</li>
+    <li>動物保険の実際の計算方法（窓口精算 vs 後日請求）によって計算式が異なる</li>
+  </ul>
+
+  <pre><code><span class="code-comment">// 修正例：保険計算をより厳密にする場合</span>
+<span class="code-var">$subtotal</span> = ...; <span class="code-comment">// 小計（税抜）</span>
+<span class="code-var">$tax</span> = <span class="code-func">floor</span>(<span class="code-var">$subtotal</span> * (<span class="code-var">$tax_rate</span> / <span class="code-number">100</span>));
+<span class="code-var">$total_with_tax</span> = <span class="code-var">$subtotal</span> + <span class="code-var">$tax</span>;
+
+<span class="code-comment">// 割引は税込額から</span>
+<span class="code-var">$after_discount</span> = <span class="code-var">$total_with_tax</span> - <span class="code-var">$discount</span>;
+
+<span class="code-comment">// 保険負担額 = (割引後の額 - 免責金額) x 保険負担率</span>
+<span class="code-var">$deductible</span> = (<span class="code-keyword">int</span>)(<span class="code-var">$_POST</span>[<span class="code-string">'deductible'</span>] ?? <span class="code-number">0</span>);
+<span class="code-var">$insurance_base</span> = <span class="code-func">max</span>(<span class="code-number">0</span>, <span class="code-var">$after_discount</span> - <span class="code-var">$deductible</span>);
+<span class="code-var">$insurance_covered</span> = <span class="code-func">floor</span>(<span class="code-var">$insurance_base</span> * <span class="code-var">$coverage_rate</span> / <span class="code-number">100</span>);
+
+<span class="code-comment">// 飼い主負担額</span>
+<span class="code-var">$owner_pays</span> = <span class="code-var">$after_discount</span> - <span class="code-var">$insurance_covered</span>;</code></pre>
+
+  <div class="vc-info-box vc-info-box-danger">
+    <div class="info-icon"><i class="bi bi-exclamation-octagon-fill"></i></div>
+    <div>
+      <strong>重要：</strong>動物保険の計算方法は保険会社ごとに異なります。
+      アニコム、アイペット等の各保険会社の公式資料を確認した上で、正確な計算式に修正してください。
+      上記の修正例はあくまで一般的な考え方の例示です。
+    </div>
+  </div>
+
+  <!-- Issue 3: invoice item calculation -->
+  <h4 style="font-weight:700;font-size:1rem;margin:28px 0 12px;color:var(--vc-danger);">問題3：明細行の金額計算</h4>
+  <p style="font-size:0.92rem;color:var(--vc-gray-600);margin-bottom:12px;">
+    <strong>対象ファイル：</strong><code>pages/invoice_form.php</code> 43-46行目
+  </p>
+  <pre><code><span class="code-comment">// 現在のコード</span>
+<span class="code-var">$name</span>  = <span class="code-var">$_POST</span>[<span class="code-string">'item_name'</span>][<span class="code-var">$i</span>];
+<span class="code-var">$qty</span>   = (<span class="code-keyword">float</span>)<span class="code-var">$_POST</span>[<span class="code-string">'item_qty'</span>][<span class="code-var">$i</span>];
+<span class="code-var">$price</span> = (<span class="code-keyword">int</span>)<span class="code-var">$_POST</span>[<span class="code-string">'item_price'</span>][<span class="code-var">$i</span>];
+<span class="code-var">$amt</span>   = <span class="code-func">round</span>(<span class="code-var">$qty</span> * <span class="code-var">$price</span>);  <span class="code-comment">// 行合計を四捨五入</span></code></pre>
+  <p style="font-size:0.88rem;color:var(--vc-gray-600);">
+    <strong>確認ポイント：</strong>数量が小数（例：0.5錠）の場合、行合計の端数処理が正しいか。
+    また、行単位で税込計算するのか、合計後に税込計算するのかも確認が必要です。
+  </p>
+</div>
+
+<!-- ===== レセプト修正 ===== -->
+<div class="vc-feature-block" id="receipt-fix">
+  <h3><div class="fb-icon" style="background:var(--vc-warning-50);color:#92400e;"><i class="bi bi-file-medical"></i></div>レセプト機能の修正</h3>
+
+  <div class="vc-disclaimer vc-disclaimer-danger" style="margin-bottom:24px;">
+    <h3><i class="bi bi-exclamation-octagon-fill" style="color:var(--vc-danger);"></i> レセプト機能の重大な限界</h3>
+    <p>
+      レセプト機能は<strong>完全にAIの推測</strong>で作られており、実際の動物保険のレセプト様式に<strong>一切準拠していません</strong>。
+      「レセプトっぽい見た目のフォーム」という認識でお使いください。実用化するには大幅な修正が必要です。
+    </p>
+  </div>
+
+  <h4 style="font-weight:700;font-size:1rem;margin:24px 0 12px;">レセプト計算の修正箇所</h4>
+  <p style="font-size:0.92rem;color:var(--vc-gray-600);margin-bottom:12px;">
+    <strong>対象ファイル：</strong><code>pages/insurance_claim_form.php</code> 15-18行目
+  </p>
+  <pre><code><span class="code-comment">// 現在のコード（保険負担額の計算）</span>
+<span class="code-var">$totalFee</span>      = (<span class="code-keyword">int</span>)<span class="code-var">$_POST</span>[<span class="code-string">'total_medical_fee'</span>];
+<span class="code-var">$covRate</span>       = <span class="code-var">$policy</span> ? <span class="code-var">$policy</span>[<span class="code-string">'coverage_rate'</span>] : <span class="code-number">50</span>;
+<span class="code-var">$coveredAmount</span> = <span class="code-func">round</span>(<span class="code-var">$totalFee</span> * <span class="code-var">$covRate</span> / <span class="code-number">100</span>);
+<span class="code-var">$ownerCopay</span>    = <span class="code-var">$totalFee</span> - <span class="code-var">$coveredAmount</span>;</code></pre>
+
+  <p style="font-size:0.92rem;color:var(--vc-gray-600);margin-bottom:12px;">
+    <strong>問題点：</strong>
+  </p>
+  <ul style="font-size:0.88rem;color:var(--vc-gray-600);line-height:2;padding-left:20px;">
+    <li>保険負担率のデフォルトが「50%」になっているが、実際の保険プランによって70%、50%、30%等がある</li>
+    <li><code>$_POST['deductible']</code>（免責金額）がレセプト計算に反映されていない（データは保存されるが計算に使われない）</li>
+    <li>保険金の支払限度額（1日あたり/1回あたり/年間上限）の概念がない</li>
+    <li>保険対象外の項目（ワクチン、避妊手術等）を除外するロジックがない</li>
+  </ul>
+
+  <h4 style="font-weight:700;font-size:1rem;margin:28px 0 12px;">レセプトの様式修正</h4>
+  <p style="font-size:0.92rem;color:var(--vc-gray-600);margin-bottom:12px;">
+    <strong>対象ファイル：</strong><code>pages/insurance_claims.php</code>（レセプト一覧表示）<br>
+    実際のレセプト様式に準拠させるには、以下の対応が必要です：
+  </p>
+  <ul style="font-size:0.88rem;color:var(--vc-gray-600);line-height:2;padding-left:20px;">
+    <li>使用している保険会社のレセプト様式（PDF）を入手する</li>
+    <li>様式に合わせたHTML/CSSテンプレートを作成する</li>
+    <li>各保険会社が求める記載項目（診療行為コード、点数テーブル等）を調査・実装する</li>
+    <li>印刷レイアウトを保険会社の用紙サイズに合わせる</li>
+  </ul>
+
+  <div class="vc-info-box vc-info-box-note">
+    <div class="info-icon"><i class="bi bi-info-circle-fill"></i></div>
+    <div>
+      <strong>現実的なアプローチ：</strong>
+      動物保険のレセプトを本格的に対応させるのは非常に大きな作業です。
+      まずは自院で使用している保険会社1社のレセプト様式だけに対応することをおすすめします。
+      保険会社によってはオンラインでの電子申請が可能な場合もあり、レセプト印刷が不要なこともあります。
+    </div>
+  </div>
+</div>
+
+<!-- ===== 検査基準値の修正 ===== -->
+<div class="vc-feature-block" id="lab-fix">
+  <h3><div class="fb-icon" style="background:#fff7ed;color:#ea580c;"><i class="bi bi-activity"></i></div>検査基準値の修正</h3>
+  <p style="color:var(--vc-gray-600);margin-bottom:20px;">
+    検査結果の「正常/異常」判定に使われる基準値は、サンプルデータとして入っているものです。
+    <strong>動物種・年齢・検査機器によって基準値は大きく異なります。</strong>必ず自院の検査機器メーカーの基準値に修正してください。
+  </p>
+
+  <h4 style="font-weight:700;font-size:1rem;margin:24px 0 12px;">方法1：管理画面から修正（推奨）</h4>
+  <ol style="font-size:0.92rem;color:var(--vc-gray-600);padding-left:20px;line-height:2.2;">
+    <li>管理者でログイン</li>
+    <li>メニューから「<strong>検査マスタ</strong>」ページへ移動</li>
+    <li>各検査項目の「<strong>基準値（下限）</strong>」「<strong>基準値（上限）</strong>」を修正</li>
+    <li>動物種別に基準値を変えたい場合は、検査項目名に動物種を含める（例：「BUN（犬）」「BUN（猫）」）</li>
+  </ol>
+
+  <h4 style="font-weight:700;font-size:1rem;margin:24px 0 12px;">方法2：データベースを直接修正</h4>
+  <p style="font-size:0.92rem;color:var(--vc-gray-600);margin-bottom:12px;">
+    大量に修正する場合は、SQLiteデータベースを直接編集する方が効率的です。
+  </p>
+  <pre><code><span class="code-comment"># SQLite データベースに接続</span>
+sqlite3 data/vetcare.db
+
+<span class="code-comment">-- 検査マスタの一覧を確認</span>
+<span class="code-keyword">SELECT</span> id, test_name, category, reference_low, reference_high, unit
+<span class="code-keyword">FROM</span> test_master
+<span class="code-keyword">ORDER BY</span> category, test_name;
+
+<span class="code-comment">-- 基準値の更新例（BUNの基準値を変更）</span>
+<span class="code-keyword">UPDATE</span> test_master
+<span class="code-keyword">SET</span> reference_low = <span class="code-number">10</span>, reference_high = <span class="code-number">30</span>
+<span class="code-keyword">WHERE</span> test_name = <span class="code-string">'BUN'</span>;
+
+<span class="code-comment">-- 一括修正用のCSVからインポート</span>
+<span class="code-comment">-- （先にCSVを準備してから）</span>
+.mode csv
+.import updated_test_master.csv test_master_temp</code></pre>
+
+  <h4 style="font-weight:700;font-size:1rem;margin:24px 0 12px;">方法3：サンプルデータ自体を修正</h4>
+  <p style="font-size:0.92rem;color:var(--vc-gray-600);margin-bottom:12px;">
+    <strong>対象ファイル：</strong><code>migrations/002_seed_data.php</code><br>
+    セットアップウィザードでサンプルデータを投入する際のデータを修正します。
+    新規インストール時に最初から正しい基準値が入るようになります。
+  </p>
+
+  <div class="vc-info-box vc-info-box-warning">
+    <div class="info-icon"><i class="bi bi-exclamation-triangle-fill"></i></div>
+    <div>
+      <strong>注意：</strong>検査基準値は<strong>検査機器のメーカー・機種</strong>によっても異なります。
+      同じ検査項目でも使用する機器が違えば基準値が変わります。
+      自院で使用している検査機器の添付文書やメーカー資料を確認してください。
+    </div>
+  </div>
+
+  <h4 style="font-weight:700;font-size:1rem;margin:24px 0 12px;">異常判定ロジックの修正</h4>
+  <p style="font-size:0.92rem;color:var(--vc-gray-600);margin-bottom:12px;">
+    検査結果の異常判定（高値↑/低値↓の表示）は、検査結果登録時に自動判定されます。
+    判定ロジックを確認・修正する場所：
+  </p>
+  <pre><code><span class="code-comment">// 検査結果の異常判定（lab_results関連のページで使用）</span>
+<span class="code-comment">// 基本的な判定ロジック:</span>
+<span class="code-keyword">if</span> (<span class="code-var">$result_value</span> < <span class="code-var">$reference_low</span>) {
+    <span class="code-var">$is_abnormal</span> = <span class="code-number">1</span>;  <span class="code-comment">// 低値（↓で表示）</span>
+} <span class="code-keyword">elseif</span> (<span class="code-var">$result_value</span> > <span class="code-var">$reference_high</span>) {
+    <span class="code-var">$is_abnormal</span> = <span class="code-number">1</span>;  <span class="code-comment">// 高値（↑で表示）</span>
+} <span class="code-keyword">else</span> {
+    <span class="code-var">$is_abnormal</span> = <span class="code-number">0</span>;  <span class="code-comment">// 正常範囲内</span>
+}
+
+<span class="code-comment">// 問題点: 動物種・年齢・性別による基準値の違いが考慮されていない</span>
+<span class="code-comment">// 改善案: test_master に species カラムを追加し、動物種別に基準値を設定</span></code></pre>
+</div>
+
+<!-- ===== 薬品マスタ ===== -->
+<div class="vc-feature-block" id="drug-fix">
+  <h3><div class="fb-icon" style="background:#faf5ff;color:var(--vc-violet);"><i class="bi bi-capsule"></i></div>薬品マスタの修正</h3>
+  <p style="color:var(--vc-gray-600);margin-bottom:20px;">
+    サンプルの薬品マスタに入っている薬品名・用量・単価はAIが推測で入力したものです。
+    必ず実際の薬品情報に基づいて修正してください。
+  </p>
+
+  <h4 style="font-weight:700;font-size:1rem;margin:24px 0 12px;">管理画面での修正</h4>
+  <ol style="font-size:0.92rem;color:var(--vc-gray-600);padding-left:20px;line-height:2.2;">
+    <li>管理者でログイン → メニュー「<strong>薬品マスタ</strong>」</li>
+    <li>各薬品の <strong>薬品名</strong>、<strong>一般名</strong>、<strong>単位</strong>、<strong>単価</strong> を確認・修正</li>
+    <li>不要な薬品は「無効化」（一覧から非表示になります）</li>
+    <li>新しい薬品は「新規登録」ボタンから追加</li>
+  </ol>
+
+  <h4 style="font-weight:700;font-size:1rem;margin:24px 0 12px;">確認すべきポイント</h4>
+  <ul style="font-size:0.88rem;color:var(--vc-gray-600);line-height:2;padding-left:20px;">
+    <li><strong>薬品名：</strong>商品名と一般名の両方が正しいか</li>
+    <li><strong>単位：</strong>錠、mL、mg、本、包 など、実際に使用する単位と合っているか</li>
+    <li><strong>単価：</strong>院内の薬価テーブルと一致しているか</li>
+    <li><strong>カテゴリ：</strong>分類が自院の管理方法と合っているか</li>
+    <li><strong>最小在庫数：</strong>在庫アラートの閾値が適切か</li>
+  </ul>
+
+  <div class="vc-info-box vc-info-box-danger">
+    <div class="info-icon"><i class="bi bi-exclamation-octagon-fill"></i></div>
+    <div>
+      <strong>警告：</strong>薬品の用法用量に関しては、必ず獣医師が確認してください。
+      AIが推測で設定した用量情報をそのまま使用すると、<strong>患畜に重大な健康被害</strong>を与える可能性があります。
+    </div>
+  </div>
+</div>
+
+<!-- ===== テンプレート修正 ===== -->
+<div class="vc-feature-block" id="template-fix">
+  <h3><div class="fb-icon" style="background:#ecfdf5;color:var(--vc-success);"><i class="bi bi-file-earmark-code"></i></div>印刷テンプレートの修正</h3>
+  <p style="color:var(--vc-gray-600);margin-bottom:20px;">
+    請求書・領収書の印刷レイアウト、記載項目を自院に合わせてカスタマイズする方法です。
+  </p>
+
+  <h4 style="font-weight:700;font-size:1rem;margin:24px 0 12px;">請求書・領収書のレイアウト修正</h4>
+  <p style="font-size:0.92rem;color:var(--vc-gray-600);margin-bottom:12px;">
+    <strong>対象ファイル：</strong><code>pages/invoice_print.php</code>
+  </p>
+  <ul style="font-size:0.88rem;color:var(--vc-gray-600);line-height:2;padding-left:20px;">
+    <li><strong>病院情報の表示位置・フォーマット</strong>を変更 → HTMLの該当部分を編集</li>
+    <li><strong>明細の表示項目</strong>（カテゴリ表示、税率表示等）を追加・削除</li>
+    <li><strong>印刷用CSSのスタイル</strong>（<code>@media print</code> セクション）を調整</li>
+    <li><strong>用紙サイズ</strong>を変更（A4、A5、レシート用紙等）</li>
+    <li><strong>ロゴ・角印の位置</strong>を調整（設定画面でアップロードしたものが自動反映されます）</li>
+  </ul>
+
+  <pre><code><span class="code-comment">/* 印刷レイアウトの CSS 修正例 */</span>
+<span class="code-keyword">@media print</span> {
+  <span class="code-comment">/* 用紙サイズの変更（A5に変更する場合） */</span>
+  <span class="code-keyword">@page</span> {
+    <span class="code-var">size</span>: A5;
+    <span class="code-var">margin</span>: <span class="code-number">10mm</span>;
+  }
+
+  <span class="code-comment">/* フォントサイズの調整 */</span>
+  body {
+    <span class="code-var">font-size</span>: <span class="code-number">11px</span>;
+  }
+}</code></pre>
+</div>
+
+<!-- ===== 一般的なヒント ===== -->
+<div class="vc-feature-block" id="general-tips">
+  <h3><div class="fb-icon" style="background:var(--vc-primary-50);color:var(--vc-primary);"><i class="bi bi-lightbulb"></i></div>修正の一般的なヒント</h3>
+
+  <h4 style="font-weight:700;font-size:1rem;margin:20px 0 12px;">修正作業の手順</h4>
+  <ol style="font-size:0.92rem;color:var(--vc-gray-600);padding-left:20px;line-height:2.4;">
+    <li><strong>バックアップを取る</strong> - 修正前に必ず <code>data/vetcare.db</code> と修正するPHPファイルのコピーを保存</li>
+    <li><strong>テスト環境で修正</strong> - 本番環境の前にXAMPP等のローカル環境で動作確認</li>
+    <li><strong>小さく修正</strong> - 一度に大きな変更をせず、少しずつ修正・テストを繰り返す</li>
+    <li><strong>ブラウザのキャッシュをクリア</strong> - CSS/JSの変更が反映されない場合はキャッシュを削除（Ctrl+Shift+R）</li>
+    <li><strong>エラーが出たら</strong> - <code>config.php</code> の <code>DEBUG_MODE</code> を <code>true</code> にしてエラーメッセージを確認</li>
+  </ol>
+
+  <h4 style="font-weight:700;font-size:1rem;margin:24px 0 12px;">PHPファイルの編集方法</h4>
+  <div class="vc-grid-2">
+    <div>
+      <h5 style="font-size:0.88rem;font-weight:700;margin-bottom:8px;">初心者の方</h5>
+      <ul style="font-size:0.85rem;color:var(--vc-gray-600);line-height:2;padding-left:18px;">
+        <li><a href="https://code.visualstudio.com/" target="_blank">Visual Studio Code</a>（無料）をインストール</li>
+        <li>PHPファイルをVS Codeで開く</li>
+        <li><code>Ctrl+G</code> で行番号を指定してジャンプ</li>
+        <li><code>Ctrl+F</code> でキーワード検索</li>
+        <li>修正後にファイルを保存（<code>Ctrl+S</code>）</li>
+      </ul>
+    </div>
+    <div>
+      <h5 style="font-size:0.88rem;font-weight:700;margin-bottom:8px;">経験者の方</h5>
+      <ul style="font-size:0.85rem;color:var(--vc-gray-600);line-height:2;padding-left:18px;">
+        <li>お好きなエディタ/IDEで編集</li>
+        <li>Gitでバージョン管理しながら修正</li>
+        <li><code>git diff</code> で変更点を確認</li>
+        <li><code>php -l ファイル名.php</code> で構文チェック</li>
+        <li>修正内容をPull Requestで共有いただけると幸いです</li>
+      </ul>
+    </div>
+  </div>
+
+  <h4 style="font-weight:700;font-size:1rem;margin:24px 0 12px;">よくある修正パターン</h4>
+  <div class="vc-table-wrap">
+    <table class="vc-table">
+      <thead><tr><th>修正したいこと</th><th>対象ファイル</th><th>検索キーワード</th></tr></thead>
+      <tbody>
+        <tr><td>消費税の端数処理</td><td><code>pages/invoice_form.php</code></td><td><code>round($subtotal</code></td></tr>
+        <tr><td>保険負担額の計算</td><td><code>pages/insurance_claim_form.php</code></td><td><code>coverage_rate</code></td></tr>
+        <tr><td>合計金額の計算式</td><td><code>pages/invoice_form.php</code></td><td><code>$total =</code></td></tr>
+        <tr><td>検査の異常判定</td><td><code>pages/lab_results.php</code></td><td><code>is_abnormal</code></td></tr>
+        <tr><td>印刷レイアウト</td><td><code>pages/invoice_print.php</code></td><td><code>@media print</code></td></tr>
+        <tr><td>税率のデフォルト値</td><td><code>pages/settings.php</code></td><td><code>tax_rate</code></td></tr>
+        <tr><td>予約枠の設定</td><td><code>pages/settings.php</code></td><td><code>appointment_interval</code></td></tr>
+        <tr><td>薬品在庫の減算</td><td><code>pages/invoice_form.php</code></td><td><code>stock_quantity</code></td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ===== コントリビュート ===== -->
+<div class="vc-feature-block" id="contribute">
+  <h3><div class="fb-icon" style="background:#faf5ff;color:var(--vc-violet);"><i class="bi bi-git"></i></div>修正をプロジェクトに貢献する</h3>
+  <p style="color:var(--vc-gray-600);margin-bottom:20px;">
+    修正した内容をGitHubを通じてプロジェクトにフィードバックしていただけると、
+    他のユーザーの方にも恩恵があります。
+  </p>
+
+  <h4 style="font-weight:700;font-size:1rem;margin:24px 0 12px;">Pull Requestの送り方（初心者向け）</h4>
+  <ol style="font-size:0.92rem;color:var(--vc-gray-600);padding-left:20px;line-height:2.4;">
+    <li>GitHubアカウントを作成（無料）</li>
+    <li><a href="https://github.com/boris15413-jpg/VetCare-Pro-ver-3" target="_blank">リポジトリ</a>ページで「Fork」ボタンをクリック</li>
+    <li>自分のForkしたリポジトリでファイルを編集（GitHub上で直接編集可能）</li>
+    <li>「Pull Request」を作成して、どこをなぜ修正したかを説明</li>
+  </ol>
+
+  <div class="vc-info-box vc-info-box-tip" style="margin-top:16px;">
+    <div class="info-icon"><i class="bi bi-lightbulb-fill"></i></div>
+    <div>
+      <strong>特に歓迎する修正：</strong>
+      <ul style="margin:8px 0 0;padding-left:18px;line-height:2;">
+        <li>消費税計算の正確な実装（動物病院の実務に基づくもの）</li>
+        <li>レセプト様式の修正（実際の保険会社の様式に基づくもの）</li>
+        <li>検査基準値の正確なデータ（動物種別・検査機器別）</li>
+        <li>薬品マスタの正確なデータ</li>
+        <li>業務フローの改善提案（動物病院経験者からの視点）</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="vc-text-center" style="margin-top:32px;">
+    <a href="https://github.com/boris15413-jpg/VetCare-Pro-ver-3/issues" target="_blank" class="vc-btn vc-btn-primary vc-btn-lg">
+      <i class="bi bi-github"></i> Issue / Pull Request を送る
+    </a>
+  </div>
+</div>
+
+</div><!-- /.vc-toc-main -->
+</div><!-- /.vc-toc-layout -->
+</div><!-- /.vc-section -->
+
+<!-- Footer -->
+<footer class="vc-footer">
+  <div class="vc-footer-inner">
+    <div><h5><i class="bi bi-heart-pulse-fill me-2"></i>VetCare Pro</h5><p>オープンソースの動物病院向け電子カルテシステム。</p></div>
+    <div><h5>ドキュメント</h5><a href="index.html">トップページ</a><a href="features.html">機能詳細</a><a href="install.html">導入ガイド</a><a href="customize.html">カスタマイズ</a></div>
+    <div><h5>リンク</h5><a href="https://github.com/boris15413-jpg/VetCare-Pro-ver-3" target="_blank">GitHub</a><a href="https://github.com/boris15413-jpg/VetCare-Pro-ver-3/issues" target="_blank">Issue Tracker</a></div>
+    <div><h5>監修者</h5><a href="https://github.com/boris15413-jpg" target="_blank">boris (GitHub)</a></div>
+  </div>
+  <div class="vc-footer-bottom">
+    <span>&copy; 2025-2026 VetCare Pro. MIT License.</span>
+    <span>Built with <i class="bi bi-robot"></i> Claude AI</span>
+  </div>
+</footer>
+
+<script src="assets/js/main.js"></script>
+</body>
+</html>

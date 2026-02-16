@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VetCare Pro - オープンソース動物病院 電子カルテシステム</title>
+<meta name="description" content="VetCare Proは、動物病院向けの無料・オープンソース電子カルテシステムです。予約管理、カルテ、会計、検査結果管理など包括的な機能を搭載。PHPとSQLiteで動作し、レンタルサーバーからローカル環境まで簡単に導入できます。">
+<meta name="keywords" content="VetCare Pro, 動物病院, 電子カルテ, EMR, オープンソース, PHP, 獣医, 予約システム">
+<meta property="og:title" content="VetCare Pro - オープンソース動物病院 電子カルテシステム">
+<meta property="og:description" content="無料・オープンソースの動物病院向け電子カルテシステム。PHP + SQLiteで簡単導入。">
+<meta property="og:type" content="website">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.2/font/bootstrap-icons.min.css" rel="stylesheet">
+<link href="assets/css/style.css" rel="stylesheet">
+</head>
+<body>
+
+<!-- ===== Navbar ===== -->
+<nav class="vc-navbar">
+  <div class="vc-navbar-inner">
+    <a href="index.html" class="vc-logo">
+      <div class="vc-logo-icon"><i class="bi bi-heart-pulse-fill"></i></div>
+      VetCare <span>Pro</span>
+    </a>
+    <button class="vc-hamburger" aria-label="Menu"><span></span><span></span><span></span></button>
+    <div class="vc-nav">
+      <a href="index.html" class="active">Home</a>
+      <a href="features.html">機能詳細</a>
+      <a href="install.html">導入ガイド</a>
+      <a href="customize.html">カスタマイズ</a>
+      <a href="https://github.com/boris15413-jpg/VetCare-Pro-ver-3" target="_blank" class="vc-nav-cta"><i class="bi bi-github"></i> GitHub</a>
+    </div>
+  </div>
+</nav>
+
+<!-- ===== Hero ===== -->
+<section class="vc-hero">
+  <div class="vc-hero-orb vc-hero-orb-1"></div>
+  <div class="vc-hero-orb vc-hero-orb-2"></div>
+  <div class="vc-hero-orb vc-hero-orb-3"></div>
+  <div class="vc-hero-inner">
+    <div class="vc-version-badge">
+      <span class="dot"></span> v3.1.0 Released
+    </div>
+    <div class="vc-hero-badge">
+      <i class="bi bi-github"></i> Open Source &mdash; MIT License &mdash; Free Forever
+    </div>
+    <h1>動物病院のための<br>オープンソース電子カルテ</h1>
+    <p class="hero-sub">
+      VetCare Proは、予約・受付・カルテ・検査・会計・レセプトまで一通りの機能を備えた
+      動物病院向け業務支援システムです。PHP + SQLite で動作し、どなたでも無料でお使いいただけます。
+    </p>
+    <div class="vc-hero-actions">
+      <a href="https://github.com/boris15413-jpg/VetCare-Pro-ver-3" target="_blank" class="vc-btn vc-btn-white vc-btn-lg">
+        <i class="bi bi-download"></i> ダウンロード (GitHub)
+      </a>
+      <a href="features.html" class="vc-btn vc-btn-outline vc-btn-lg">
+        <i class="bi bi-grid-1x2"></i> 機能を見る
+      </a>
+      <a href="install.html" class="vc-btn vc-btn-outline vc-btn-lg">
+        <i class="bi bi-tools"></i> 導入ガイド
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ===== CRITICAL DISCLAIMERS (Top Priority) ===== -->
+<div style="padding: 0 24px; max-width: 1200px; margin: 0 auto;">
+
+  <!-- Disclaimer 1: Biggest Warning -->
+  <div class="vc-disclaimer vc-disclaimer-danger" style="margin-top: -40px; position: relative; z-index: 10;" data-reveal>
+    <h3><i class="bi bi-exclamation-octagon-fill" style="color:var(--vc-danger);font-size:1.3rem;"></i> 重要：ご利用前に必ずお読みください</h3>
+    <p style="font-weight:700;color:#991b1b;margin-bottom:14px;font-size:0.95rem;">
+      本システムは<strong>動物病院の実務経験がない監修者</strong>の指導のもと、<strong>AI（Claude）を使って構築</strong>されたプロトタイプです。<br>
+      <u>実際の動物病院でそのまま使用することは想定していません。</u>
+    </p>
+    <ul style="color:#7f1d1d;">
+      <li><strong>会計・計算機能</strong>は正確性が保証されていません。税率計算、保険点数計算、請求金額等に誤りがある可能性があります。</li>
+      <li><strong>レセプト（診療報酬明細書）機能</strong>は形式的なものであり、実際の保険請求で使用できる品質ではありません。</li>
+      <li><strong>薬品マスタ・検査マスタ</strong>はサンプルデータであり、実際の薬品名・用量・基準値と異なる場合があります。</li>
+      <li>本システムの利用により生じたいかなる損害についても、開発者・監修者は<strong>一切の責任を負いません</strong>。</li>
+      <li>実運用する場合は、獣医師・動物病院スタッフの方が<strong>必ずすべてのデータと計算ロジックを検証</strong>してからお使いください。</li>
+    </ul>
+  </div>
+
+  <!-- Disclaimer 2: Supervisor Warning -->
+  <div class="vc-disclaimer vc-disclaimer-warning" data-reveal>
+    <h3><i class="bi bi-person-exclamation" style="color:#92400e;font-size:1.2rem;"></i> 監修者の経歴に関する重要な注意</h3>
+    <p style="font-weight:700;color:#78350f;margin-bottom:14px;">
+      本プロジェクトの監修者は<strong>公務員獣医師</strong>（行政機関勤務）です。<strong>動物病院（臨床）での勤務経験は一切ありません。</strong>
+    </p>
+    <ul style="color:#78350f;">
+      <li>動物病院の日常業務フロー（受付の流れ、会計処理、レセプト提出方法など）を<strong>実体験として知りません</strong>。</li>
+      <li>「動物病院の電子カルテはこんな機能が必要だろう」という<strong>推測</strong>に基づいて仕様を決定しています。</li>
+      <li>保険請求の実務、動物用薬品の用法用量、検査基準値の正確な数値は、<strong>臨床現場の専門家による検証が必須</strong>です。</li>
+      <li>公務員獣医師としての業務（と畜検査、食品衛生監視、動物愛護行政等）と動物病院の臨床業務は<strong>全く異なります</strong>。</li>
+    </ul>
+  </div>
+
+  <!-- Disclaimer 3: AI built -->
+  <div class="vc-disclaimer vc-disclaimer-info" data-reveal>
+    <h3><i class="bi bi-robot" style="color:var(--vc-primary);font-size:1.2rem;"></i> AI（Claude）で構築されたシステムです</h3>
+    <p style="margin-bottom:14px;">
+      本システムのソースコードの大部分は、Anthropic社のAIアシスタント「<strong>Claude</strong>」によって生成されました。
+      人間の監修者が仕様を指示し、AIがコードを出力する形で開発されています。
+    </p>
+    <ul style="color:#1e3a5f;">
+      <li>AIが生成したコードには、予期しない<strong>バグやセキュリティ上の問題</strong>が含まれる可能性があります。</li>
+      <li>医療関連の業務ロジック（投薬量計算、検査基準値判定等）はAIが推測で実装しており、<strong>医学的な正確性は保証されません</strong>。</li>
+      <li>コードの品質向上・バグ修正の<strong>プルリクエストを大歓迎</strong>しています。</li>
+      <li>Claudeの出力はあくまでツールの成果物です。<strong>最終的な品質保証は利用者ご自身の責任</strong>となります。</li>
+    </ul>
+  </div>
+
+</div>
+
+<!-- ===== Supervisor / Credits ===== -->
+<section class="vc-section" data-reveal>
+  <div class="vc-section-title">
+    <div class="title-icon"><i class="bi bi-person-badge"></i></div>
+    <h2>プロジェクト監修者について</h2>
+    <p>どんな背景の人が作っているのかを透明に開示します</p>
+  </div>
+
+  <div style="max-width:800px; margin:0 auto;">
+    <div class="vc-person-card">
+      <div class="vc-person-avatar"><i class="bi bi-person-fill"></i></div>
+      <div class="vc-person-info">
+        <h4>boris</h4>
+        <div class="role"><i class="bi bi-shield-check me-1"></i>プロジェクト監修 / 公務員獣医師</div>
+        <p style="font-size:0.88rem;color:var(--vc-gray-600);margin-bottom:14px;line-height:1.8;">
+          行政機関で公務員獣医師として勤務。動物病院の日常業務（受付フロー、会計、レセプト請求等）についての知識は限定的です。
+          本ツールは「こういうものがあれば便利かもしれない」という発想から、AIの力を借りて作成したプロトタイプです。
+          動物病院の臨床経験はゼロのため、機能の正確性について責任を持てる立場にはないことをご理解ください。
+        </p>
+        <div class="vc-person-links">
+          <a href="https://github.com/boris15413-jpg" target="_blank"><i class="bi bi-github"></i> GitHub</a>
+          <a href="https://x.com/" target="_blank"><i class="bi bi-twitter-x"></i> X (Twitter)</a>
+          <!-- Add more links as needed -->
+        </div>
+      </div>
+    </div>
+
+    <div style="margin-top:24px; padding:20px 24px; background:var(--vc-gray-50); border-radius:var(--vc-radius); border:1px solid var(--vc-gray-200);">
+      <p style="font-size:0.88rem; color:var(--vc-gray-600); margin:0; line-height:1.8;">
+        <i class="bi bi-info-circle me-1" style="color:var(--vc-primary);"></i>
+        <strong>開発背景：</strong>
+        このプロジェクトは、Anthropic社のAI「<strong>Claude</strong>」を活用し、監修者borisが仕様設計と指示を行うことで開発されました。
+        コードの大部分はAIが生成しており、人間はプロジェクトの方向性決定と品質チェック（ただし臨床知識に限界あり）を担当しています。
+        オープンソースとして公開することで、<strong>動物病院の現場を知る方々からのフィードバック</strong>を得ることを期待しています。
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ===== What is VetCare Pro ===== -->
+<section class="vc-bg-gray" data-reveal>
+  <div class="vc-section">
+    <div class="vc-section-title">
+      <div class="title-icon"><i class="bi bi-heart-pulse"></i></div>
+      <h2>VetCare Pro とは</h2>
+      <p>小規模〜中規模の動物病院に向けた、オールインワンの業務支援システム</p>
+    </div>
+
+    <div class="vc-stats-row" data-reveal>
+      <div class="vc-stat">
+        <div class="vc-stat-num">60+</div>
+        <div class="vc-stat-label">画面・機能数</div>
+      </div>
+      <div class="vc-stat">
+        <div class="vc-stat-num">14</div>
+        <div class="vc-stat-label">対応動物種</div>
+      </div>
+      <div class="vc-stat">
+        <div class="vc-stat-num">PHP 8</div>
+        <div class="vc-stat-label">動作環境</div>
+      </div>
+      <div class="vc-stat">
+        <div class="vc-stat-num">0</div>
+        <div class="vc-stat-label">費用 (円)</div>
+      </div>
+    </div>
+
+    <div class="vc-card-grid" data-reveal-stagger>
+      <div class="vc-card">
+        <div class="vc-card-icon" style="background:var(--vc-primary-50);color:var(--vc-primary);"><i class="bi bi-calendar-check"></i></div>
+        <h3>Web予約システム</h3>
+        <p>飼い主がスマホから24時間予約可能。枠の空き状況をリアルタイム表示。担当医師の確認、新患登録にも対応。</p>
+      </div>
+      <div class="vc-card">
+        <div class="vc-card-icon" style="background:#f0fdf4;color:var(--vc-success);"><i class="bi bi-clipboard2-pulse"></i></div>
+        <h3>電子カルテ (SOAP)</h3>
+        <p>SOAP形式の診療記録。テンプレート機能でよく使う記録を素早く入力。検査結果・画像の添付にも対応。</p>
+      </div>
+      <div class="vc-card">
+        <div class="vc-card-icon" style="background:#faf5ff;color:var(--vc-violet);"><i class="bi bi-receipt"></i></div>
+        <h3>会計・請求管理 *</h3>
+        <p>診療明細書・領収書の発行。消費税自動計算。保険連携機能とレセプト出力。<strong style="color:var(--vc-danger);font-size:0.82rem;">* 計算精度は未検証</strong></p>
+      </div>
+      <div class="vc-card">
+        <div class="vc-card-icon" style="background:#fff7ed;color:#ea580c;"><i class="bi bi-activity"></i></div>
+        <h3>検査結果管理</h3>
+        <p>血液検査等の結果を記録・基準値判定。異常値の自動ハイライト。CSV一括インポートにも対応。</p>
+      </div>
+      <div class="vc-card">
+        <div class="vc-card-icon" style="background:#fdf2f8;color:#db2777;"><i class="bi bi-people"></i></div>
+        <h3>患者・飼い主管理</h3>
+        <p>患畜と飼い主をひも付けて管理。体重推移グラフ、画像管理、ワクチン履歴。複数ペットの一元管理。</p>
+      </div>
+      <div class="vc-card">
+        <div class="vc-card-icon" style="background:#f0fdfa;color:#0d9488;"><i class="bi bi-shield-check"></i></div>
+        <h3>セキュリティ</h3>
+        <p>IPホワイトリストによるアクセス制限。CSRF対策、セッション管理。外部予約ページの分離設計。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== Tech Stack ===== -->
+<section class="vc-section" data-reveal>
+  <div class="vc-section-title">
+    <div class="title-icon"><i class="bi bi-cpu"></i></div>
+    <h2>技術スタック</h2>
+    <p>シンプルで運用しやすい構成。特別な環境は不要です。</p>
+  </div>
+  <div class="vc-card-grid" style="grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));" data-reveal-stagger>
+    <div class="vc-card vc-text-center">
+      <div style="font-size:2.2rem;color:var(--vc-violet);margin-bottom:10px;"><i class="bi bi-filetype-php"></i></div>
+      <h3>PHP 8.0+</h3>
+      <p>バックエンド言語</p>
+    </div>
+    <div class="vc-card vc-text-center">
+      <div style="font-size:2.2rem;color:var(--vc-primary);margin-bottom:10px;"><i class="bi bi-database"></i></div>
+      <h3>SQLite / MySQL</h3>
+      <p>データベース</p>
+    </div>
+    <div class="vc-card vc-text-center">
+      <div style="font-size:2.2rem;color:#ea580c;margin-bottom:10px;"><i class="bi bi-filetype-html"></i></div>
+      <h3>Bootstrap 5</h3>
+      <p>UIフレームワーク</p>
+    </div>
+    <div class="vc-card vc-text-center">
+      <div style="font-size:2.2rem;color:#eab308;margin-bottom:10px;"><i class="bi bi-filetype-js"></i></div>
+      <h3>Vanilla JS</h3>
+      <p>フロントエンド（フレームワーク不要）</p>
+    </div>
+  </div>
+  <div class="vc-text-center" style="margin-top:36px;">
+    <p style="font-size:0.92rem;color:var(--vc-gray-500);">
+      Node.js不要・Composer不要・ビルド不要。PHPが動く環境ならどこでも動きます。<br>
+      レンタルサーバー、VPS、自宅サーバー、XAMPP/MAMPなど幅広い環境に対応。
+    </p>
+  </div>
+</section>
+
+<!-- ===== Quick Start ===== -->
+<section class="vc-bg-gray" data-reveal>
+  <div class="vc-section">
+    <div class="vc-section-title">
+      <div class="title-icon"><i class="bi bi-rocket-takeoff"></i></div>
+      <h2>かんたん3ステップ導入</h2>
+      <p>ダウンロードからすぐに使えます</p>
+    </div>
+
+    <div style="max-width:720px;margin:0 auto;">
+      <div class="vc-step" data-reveal>
+        <div class="vc-step-num">1</div>
+        <div class="vc-step-content">
+          <h4>ダウンロード & 配置</h4>
+          <p>GitHubからZIPをダウンロード（またはgit clone）し、Webサーバーのドキュメントルートに配置します。</p>
+          <pre><code>git clone https://github.com/boris15413-jpg/VetCare-Pro-ver-3.git
+cd VetCare-Pro-ver-3</code></pre>
+        </div>
+      </div>
+      <div class="vc-step" data-reveal>
+        <div class="vc-step-num">2</div>
+        <div class="vc-step-content">
+          <h4>ブラウザでアクセス</h4>
+          <p>初回アクセス時にセットアップウィザードが自動起動。DB初期化、管理者作成、施設設定を画面の指示に従って入力。</p>
+        </div>
+      </div>
+      <div class="vc-step" data-reveal>
+        <div class="vc-step-num">3</div>
+        <div class="vc-step-content">
+          <h4>完了！すぐに使い始められます</h4>
+          <p>セットアップが完了するとログイン画面が表示されます。全機能がデフォルトで有効化された状態で利用開始できます。</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="vc-text-center" style="margin-top:40px;">
+      <a href="install.html" class="vc-btn vc-btn-primary vc-btn-lg"><i class="bi bi-book"></i> 詳しい導入ガイドを見る</a>
+    </div>
+  </div>
+</section>
+
+<!-- ===== Feature Highlights ===== -->
+<section class="vc-section" data-reveal>
+  <div class="vc-section-title">
+    <div class="title-icon"><i class="bi bi-stars"></i></div>
+    <h2>主な機能一覧</h2>
+    <p>動物病院の一日の業務フローに沿った機能群</p>
+  </div>
+
+  <div class="vc-table-wrap" data-reveal>
+    <table class="vc-table">
+      <thead>
+        <tr>
+          <th>カテゴリ</th>
+          <th>機能</th>
+          <th>概要</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td><span class="vc-tag vc-tag-blue">予約</span></td><td>Web予約ページ</td><td>公開予約ページ、枠管理、担当医師表示、新患登録</td></tr>
+        <tr><td><span class="vc-tag vc-tag-blue">予約</span></td><td>予約管理</td><td>日別・週別ビュー、ステータス管理、LINE通知連携</td></tr>
+        <tr><td><span class="vc-tag vc-tag-green">受付</span></td><td>受付・待合表示</td><td>チェックイン、番号発行モード、待合表示画面</td></tr>
+        <tr><td><span class="vc-tag vc-tag-violet">カルテ</span></td><td>SOAP診療記録</td><td>テンプレート入力、オーダー連携、添付画像</td></tr>
+        <tr><td><span class="vc-tag vc-tag-violet">カルテ</span></td><td>患者・飼い主管理</td><td>詳細情報、体重推移、ワクチン履歴、画像管理</td></tr>
+        <tr><td><span class="vc-tag vc-tag-yellow">検査</span></td><td>検査結果管理</td><td>基準値判定、異常値ハイライト、CSV一括取込</td></tr>
+        <tr><td><span class="vc-tag vc-tag-yellow">検査</span></td><td>病理記録</td><td>サンプル管理、倍率・染色法記録</td></tr>
+        <tr><td><span class="vc-tag vc-tag-red">会計</span></td><td>請求書・領収書</td><td>明細書発行、消費税自動計算、印刷対応</td></tr>
+        <tr><td><span class="vc-tag vc-tag-red">会計</span></td><td>保険・レセプト</td><td>保険会社マスタ、保険請求管理、レセプト出力</td></tr>
+        <tr><td><span class="vc-tag vc-tag-blue">管理</span></td><td>マスタ管理</td><td>薬品、検査、処置、診断名マスタ</td></tr>
+        <tr><td><span class="vc-tag vc-tag-blue">管理</span></td><td>スタッフ管理</td><td>アカウント、権限、シフト・休日管理</td></tr>
+        <tr><td><span class="vc-tag vc-tag-blue">管理</span></td><td>設定</td><td>施設情報、予約設定、セキュリティ、LINE連携</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="vc-text-center" style="margin-top:36px;">
+    <a href="features.html" class="vc-btn vc-btn-primary"><i class="bi bi-list-columns-reverse"></i> 全機能の詳細ドキュメントを見る</a>
+  </div>
+</section>
+
+<!-- ===== Who is this for ===== -->
+<section class="vc-bg-gray" data-reveal>
+  <div class="vc-section">
+    <div class="vc-section-title">
+      <div class="title-icon"><i class="bi bi-people"></i></div>
+      <h2>こんな方におすすめ</h2>
+      <p>本システムの想定される利用シーン</p>
+    </div>
+    <div class="vc-card-grid" style="grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));" data-reveal-stagger>
+      <div class="vc-card">
+        <h3><i class="bi bi-mortarboard me-2" style="color:var(--vc-primary);"></i>学習・研究目的</h3>
+        <p>獣医学生やIT学生が、動物病院の業務フローやEMRシステムの仕組みを学ぶ教材として。</p>
+      </div>
+      <div class="vc-card">
+        <h3><i class="bi bi-tools me-2" style="color:var(--vc-violet);"></i>カスタマイズのベース</h3>
+        <p>自院に合った電子カルテを自作したい方の出発点として。PHPなので改造が容易です。</p>
+      </div>
+      <div class="vc-card">
+        <h3><i class="bi bi-lightbulb me-2" style="color:var(--vc-warning);"></i>プロトタイプ・デモ</h3>
+        <p>「動物病院の電子カルテはこういう機能が必要」を可視化するデモンストレーション用途として。</p>
+      </div>
+      <div class="vc-card">
+        <h3><i class="bi bi-building me-2" style="color:var(--vc-success);"></i>小規模病院のお試し</h3>
+        <p>まず無料で電子カルテを試してみたい小規模動物病院に。ただし、<strong style="color:var(--vc-danger);">計算機能は必ず検証</strong>してから。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== Known Limitations ===== -->
+<section class="vc-section" data-reveal>
+  <div class="vc-section-title">
+    <div class="title-icon" style="background:var(--vc-danger-50);color:var(--vc-danger);"><i class="bi bi-exclamation-triangle"></i></div>
+    <h2>既知の制限事項・注意点</h2>
+    <p>利用前に必ず把握しておいていただきたい点</p>
+  </div>
+
+  <div style="max-width:800px;margin:0 auto;">
+    <div class="vc-accordion-group">
+      <div class="vc-accordion open">
+        <div class="vc-accordion-header">
+          <span><i class="bi bi-calculator me-2" style="color:var(--vc-danger);"></i>会計・計算機能の不正確性</span>
+          <i class="bi bi-chevron-down arrow"></i>
+        </div>
+        <div class="vc-accordion-body">
+          <p style="font-size:0.92rem;color:var(--vc-gray-600);line-height:1.9;">
+            消費税の端数処理（切り捨て/切り上げ/四捨五入）の方式が実際の慣行と異なる可能性があります。
+            保険適用時の自己負担額計算ロジックは推測で実装されており、実際の動物保険制度と合致しない場合があります。
+            <strong>修正方法は<a href="customize.html#accounting-fix">カスタマイズガイド</a>で詳しく解説しています。</strong>
+          </p>
+        </div>
+      </div>
+      <div class="vc-accordion">
+        <div class="vc-accordion-header">
+          <span><i class="bi bi-file-medical me-2" style="color:var(--vc-warning);"></i>レセプト機能の形式的な実装</span>
+          <i class="bi bi-chevron-down arrow"></i>
+        </div>
+        <div class="vc-accordion-body">
+          <p style="font-size:0.92rem;color:var(--vc-gray-600);line-height:1.9;">
+            レセプト（診療報酬明細書）は画面・印刷上の形式を整えただけであり、実際の動物保険のレセプト様式に準拠していません。
+            保険点数コード、点数テーブル、記載項目は実際の保険制度に基づいていないため、そのままでは保険請求に使用できません。
+          </p>
+        </div>
+      </div>
+      <div class="vc-accordion">
+        <div class="vc-accordion-header">
+          <span><i class="bi bi-capsule me-2" style="color:var(--vc-violet);"></i>薬品・検査マスタの不正確性</span>
+          <i class="bi bi-chevron-down arrow"></i>
+        </div>
+        <div class="vc-accordion-body">
+          <p style="font-size:0.92rem;color:var(--vc-gray-600);line-height:1.9;">
+            サンプルデータとして登録されている薬品名・用法用量・検査基準値は、AIが一般的な資料から推測して作成したものです。
+            実際の動物用医薬品や検査基準値と異なる場合があるため、使用前に必ず最新の獣医学的根拠に基づいて修正してください。
+          </p>
+        </div>
+      </div>
+      <div class="vc-accordion">
+        <div class="vc-accordion-header">
+          <span><i class="bi bi-shield-x me-2" style="color:var(--vc-danger);"></i>セキュリティに関する注意</span>
+          <i class="bi bi-chevron-down arrow"></i>
+        </div>
+        <div class="vc-accordion-body">
+          <p style="font-size:0.92rem;color:var(--vc-gray-600);line-height:1.9;">
+            本システムはセキュリティの基本対策（CSRF対策、パスワードハッシュ化、IPホワイトリスト等）を実装していますが、
+            専門のセキュリティ監査を受けていません。個人情報を扱う場合は、必ず追加のセキュリティ対策を施してください。
+            インターネット上に公開する場合はSSL/TLS（HTTPS）の導入が必須です。
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== Contribute ===== -->
+<section class="vc-bg-gray" data-reveal>
+  <div class="vc-section vc-text-center">
+    <div class="title-icon" style="display:inline-flex;align-items:center;justify-content:center;width:52px;height:52px;border-radius:16px;background:#faf5ff;color:var(--vc-violet);font-size:1.4rem;margin-bottom:16px;">
+      <i class="bi bi-code-slash"></i>
+    </div>
+    <h2 style="font-size:1.9rem;font-weight:900;margin-bottom:14px;">コントリビューション歓迎</h2>
+    <p style="max-width:640px;margin:0 auto 28px;color:var(--vc-gray-500);font-size:0.95rem;">
+      特に以下の分野でのご協力をお待ちしています。動物病院の現場経験がある方からの修正・改善提案は特に貴重です。
+    </p>
+    <div class="vc-card-grid" style="max-width:900px;margin:0 auto;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));" data-reveal-stagger>
+      <div class="vc-card">
+        <h3 style="color:var(--vc-danger);"><i class="bi bi-calculator"></i> 会計ロジックの検証</h3>
+        <p>消費税計算、保険点数計算、請求金額の正確性を検証・修正してくださる方</p>
+      </div>
+      <div class="vc-card">
+        <h3 style="color:var(--vc-warning);"><i class="bi bi-file-medical"></i> レセプト機能の改善</h3>
+        <p>実際のレセプト様式に準拠した出力になるよう修正してくださる方</p>
+      </div>
+      <div class="vc-card">
+        <h3 style="color:var(--vc-success);"><i class="bi bi-hospital"></i> 臨床ワークフロー監修</h3>
+        <p>動物病院の実務経験者による業務フローの監修・改善提案</p>
+      </div>
+    </div>
+    <div style="margin-top:36px;">
+      <a href="https://github.com/boris15413-jpg/VetCare-Pro-ver-3/issues" target="_blank" class="vc-btn vc-btn-primary vc-btn-lg">
+        <i class="bi bi-github"></i> Issue / Pull Request を送る
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ===== License ===== -->
+<section class="vc-section vc-text-center" data-reveal>
+  <h2 style="font-size:1.6rem;font-weight:900;margin-bottom:14px;">ライセンス</h2>
+  <p style="color:var(--vc-gray-500);max-width:620px;margin:0 auto 16px;font-size:0.95rem;">
+    VetCare Proは <strong>MITライセンス</strong> のもとで公開されています。<br>
+    商用利用・改変・再配布は自由ですが、<strong>無保証</strong>であることにご注意ください。
+  </p>
+  <p style="font-size:0.82rem;color:var(--vc-gray-400);">
+    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND.
+  </p>
+</section>
+
+<!-- ===== Footer ===== -->
+<footer class="vc-footer">
+  <div class="vc-footer-inner">
+    <div>
+      <h5><i class="bi bi-heart-pulse-fill me-2"></i>VetCare Pro</h5>
+      <p>オープンソースの動物病院向け電子カルテシステム。<br>PHP + SQLite で動作。AI（Claude）を活用して開発。</p>
+    </div>
+    <div>
+      <h5>ドキュメント</h5>
+      <a href="index.html">トップページ</a>
+      <a href="features.html">機能詳細</a>
+      <a href="install.html">導入ガイド</a>
+      <a href="customize.html">カスタマイズ</a>
+    </div>
+    <div>
+      <h5>リンク</h5>
+      <a href="https://github.com/boris15413-jpg/VetCare-Pro-ver-3" target="_blank">GitHub リポジトリ</a>
+      <a href="https://github.com/boris15413-jpg/VetCare-Pro-ver-3/issues" target="_blank">Issue Tracker</a>
+      <a href="https://github.com/boris15413-jpg/VetCare-Pro-ver-3/releases" target="_blank">リリース一覧</a>
+    </div>
+    <div>
+      <h5>監修者</h5>
+      <a href="https://github.com/boris15413-jpg" target="_blank">boris (GitHub)</a>
+      <a href="https://x.com/" target="_blank">X (Twitter)</a>
+    </div>
+  </div>
+  <div class="vc-footer-bottom">
+    <span>&copy; 2025-2026 VetCare Pro. Open Source under MIT License.</span>
+    <span>Built with <i class="bi bi-robot"></i> Claude AI + Human Supervision</span>
+  </div>
+</footer>
+
+<script src="assets/js/main.js"></script>
+</body>
+</html>

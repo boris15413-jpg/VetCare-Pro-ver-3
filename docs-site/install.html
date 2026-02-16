@@ -1,0 +1,666 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>導入ガイド - VetCare Pro</title>
+<meta name="description" content="VetCare Proの導入方法を初心者向けに詳しく解説。レンタルサーバー、自前サーバー（VPS）、XAMPP/MAMPでの導入手順。">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.2/font/bootstrap-icons.min.css" rel="stylesheet">
+<link href="assets/css/style.css" rel="stylesheet">
+</head>
+<body>
+
+<!-- Navbar -->
+<nav class="vc-navbar"><div class="vc-navbar-inner">
+  <a href="index.html" class="vc-logo"><div class="vc-logo-icon"><i class="bi bi-heart-pulse-fill"></i></div>VetCare <span>Pro</span></a>
+  <button class="vc-hamburger" aria-label="Menu"><span></span><span></span><span></span></button>
+  <div class="vc-nav">
+    <a href="index.html">Home</a>
+    <a href="features.html">機能詳細</a>
+    <a href="install.html" class="active">導入ガイド</a>
+    <a href="customize.html">カスタマイズ</a>
+    <a href="https://github.com/boris15413-jpg/VetCare-Pro-ver-3" target="_blank" class="vc-nav-cta"><i class="bi bi-github"></i> GitHub</a>
+  </div>
+</div></nav>
+
+<!-- Hero -->
+<section class="vc-page-hero">
+  <div class="vc-breadcrumb"><a href="index.html">Home</a> <span>/</span> <span>導入ガイド</span></div>
+  <h1>導入ガイド（初心者向け）</h1>
+  <p>レンタルサーバー・自前サーバー・XAMPP、環境別にステップバイステップで解説</p>
+</section>
+
+<div class="vc-section vc-section-sm">
+<div class="vc-toc-layout">
+
+<!-- TOC Sidebar -->
+<nav class="vc-toc">
+  <h4>目次</h4>
+  <a href="#requirements">動作要件</a>
+  <a href="#download">ダウンロード方法</a>
+  <a href="#rental">レンタルサーバー</a>
+  <a href="#vps">自前サーバー (VPS)</a>
+  <a href="#xampp">XAMPP / MAMP</a>
+  <a href="#wizard">セットアップウィザード</a>
+  <a href="#after-install">導入後の設定</a>
+  <a href="#troubleshoot">トラブルシューティング</a>
+  <a href="#update">アップデート方法</a>
+</nav>
+
+<!-- Main Content -->
+<div class="vc-toc-main">
+
+<!-- ===== 動作要件 ===== -->
+<div class="vc-feature-block" id="requirements">
+  <h3><div class="fb-icon" style="background:var(--vc-primary-50);color:var(--vc-primary);"><i class="bi bi-check-circle"></i></div>動作要件</h3>
+  <p style="color:var(--vc-gray-600);margin-bottom:20px;">
+    VetCare Proは非常にシンプルな構成のため、ほとんどのPHPサーバーで動作します。
+  </p>
+
+  <div class="vc-grid-2" style="margin-bottom:24px;">
+    <div class="vc-card" style="padding:24px;">
+      <h4 style="font-size:0.95rem;font-weight:700;color:var(--vc-success);margin-bottom:12px;"><i class="bi bi-check-circle-fill me-1"></i>必須要件</h4>
+      <ul style="list-style:none;padding:0;font-size:0.88rem;color:var(--vc-gray-600);">
+        <li style="padding:4px 0;"><strong>PHP 8.0以上</strong>（8.1 / 8.2 / 8.3 すべて動作確認済み）</li>
+        <li style="padding:4px 0;"><strong>PDO拡張</strong>（SQLiteまたはMySQL用）</li>
+        <li style="padding:4px 0;"><strong>Webサーバー</strong>（Apache / Nginx / PHP内蔵サーバー）</li>
+        <li style="padding:4px 0;"><code>data/</code> ディレクトリへの<strong>書き込み権限</strong></li>
+      </ul>
+    </div>
+    <div class="vc-card" style="padding:24px;">
+      <h4 style="font-size:0.95rem;font-weight:700;color:var(--vc-primary);margin-bottom:12px;"><i class="bi bi-info-circle-fill me-1"></i>推奨・オプション</h4>
+      <ul style="list-style:none;padding:0;font-size:0.88rem;color:var(--vc-gray-600);">
+        <li style="padding:4px 0;">PHP <code>mbstring</code> 拡張（日本語処理の改善）</li>
+        <li style="padding:4px 0;">PHP <code>gd</code> / <code>imagick</code>（画像処理用）</li>
+        <li style="padding:4px 0;">SSL/TLS証明書（HTTPS対応）</li>
+        <li style="padding:4px 0;">メモリ 128MB以上（PHPのmemory_limit）</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="vc-info-box vc-info-box-tip">
+    <div class="info-icon"><i class="bi bi-lightbulb-fill"></i></div>
+    <div>
+      <strong>初心者の方へ：</strong>
+      難しそうに見えますが、日本の主要レンタルサーバー（Xserver、さくら、ロリポップ、ConoHa WING等）は、
+      これらの要件をすべて満たしています。特別な設定なしで動きます。
+    </div>
+  </div>
+</div>
+
+<!-- ===== ダウンロード ===== -->
+<div class="vc-feature-block" id="download">
+  <h3><div class="fb-icon" style="background:#ecfdf5;color:var(--vc-success);"><i class="bi bi-download"></i></div>ダウンロード方法</h3>
+  <p style="color:var(--vc-gray-600);margin-bottom:20px;">2つの方法でダウンロードできます。初心者の方はZIPダウンロードがおすすめです。</p>
+
+  <h4 style="font-weight:700;font-size:0.95rem;margin:20px 0 12px;">方法1：ZIPダウンロード（初心者向け）</h4>
+  <ol style="font-size:0.92rem;color:var(--vc-gray-600);padding-left:20px;line-height:2.2;">
+    <li>GitHubのリポジトリページ <a href="https://github.com/boris15413-jpg/VetCare-Pro-ver-3" target="_blank">https://github.com/boris15413-jpg/VetCare-Pro-ver-3</a> にアクセス</li>
+    <li>緑色の「<strong>Code</strong>」ボタンをクリック</li>
+    <li>「<strong>Download ZIP</strong>」をクリック</li>
+    <li>ダウンロードされたZIPファイルを解凍</li>
+    <li>解凍されたフォルダ（<code>VetCare-Pro-ver-3-main</code>）の<strong>中身</strong>をサーバーにアップロード</li>
+  </ol>
+
+  <h4 style="font-weight:700;font-size:0.95rem;margin:20px 0 12px;">方法2：git clone（経験者向け）</h4>
+  <pre><code><span class="code-comment"># リポジトリをクローン</span>
+git clone https://github.com/boris15413-jpg/VetCare-Pro-ver-3.git
+
+<span class="code-comment"># ディレクトリに移動</span>
+cd VetCare-Pro-ver-3</code></pre>
+
+  <div class="vc-info-box vc-info-box-warning">
+    <div class="info-icon"><i class="bi bi-exclamation-triangle-fill"></i></div>
+    <div>
+      <strong>注意：</strong>ZIPを解凍すると「VetCare-Pro-ver-3-main」というフォルダが作成されます。
+      サーバーにアップロードするのは<strong>フォルダの中身</strong>（index.phpやconfig.phpが入っているファイル群）です。
+      フォルダごとアップロードしないよう注意してください。
+    </div>
+  </div>
+</div>
+
+<!-- ===== レンタルサーバー ===== -->
+<div class="vc-feature-block" id="rental">
+  <h3><div class="fb-icon" style="background:#faf5ff;color:var(--vc-violet);"><i class="bi bi-cloud-upload"></i></div>レンタルサーバーでの導入</h3>
+  <p style="color:var(--vc-gray-600);margin-bottom:8px;">
+    最も簡単な方法です。Xserver、さくらインターネット、ロリポップ、ConoHa WING などの日本の主要レンタルサーバーで動作します。
+  </p>
+  <div class="vc-floating-label" style="margin-bottom:20px;">難易度：初級</div>
+
+  <h4 style="font-weight:700;font-size:0.95rem;margin:24px 0 12px;"><i class="bi bi-1-circle me-1" style="color:var(--vc-primary);"></i> 前提条件の確認</h4>
+  <ul class="vc-feature-list">
+    <li>レンタルサーバーの契約が済んでいること</li>
+    <li>FTPソフト（FileZilla推奨）またはサーバーのファイルマネージャーが使えること</li>
+    <li>レンタルサーバーのPHPバージョンが<strong>8.0以上</strong>であること（サーバーのコントロールパネルで確認・変更可能）</li>
+  </ul>
+
+  <h4 style="font-weight:700;font-size:0.95rem;margin:24px 0 12px;"><i class="bi bi-2-circle me-1" style="color:var(--vc-primary);"></i> PHPバージョンの確認・変更方法</h4>
+  <div class="vc-accordion-group">
+    <div class="vc-accordion">
+      <div class="vc-accordion-header">
+        <span>Xserver の場合</span>
+        <i class="bi bi-chevron-down arrow"></i>
+      </div>
+      <div class="vc-accordion-body">
+        <ol style="font-size:0.88rem;color:var(--vc-gray-600);line-height:2.2;">
+          <li>サーバーパネルにログイン</li>
+          <li>「PHP」→「PHP Ver.切替」をクリック</li>
+          <li>対象ドメインを選択</li>
+          <li>「PHP8.1」以上を選択して「変更」をクリック</li>
+        </ol>
+      </div>
+    </div>
+    <div class="vc-accordion">
+      <div class="vc-accordion-header">
+        <span>さくらインターネット の場合</span>
+        <i class="bi bi-chevron-down arrow"></i>
+      </div>
+      <div class="vc-accordion-body">
+        <ol style="font-size:0.88rem;color:var(--vc-gray-600);line-height:2.2;">
+          <li>サーバーコントロールパネルにログイン</li>
+          <li>「スクリプト設定」→「言語のバージョン設定」をクリック</li>
+          <li>PHPのバージョンを「8.1」以上に変更</li>
+          <li>「保存」をクリック</li>
+        </ol>
+      </div>
+    </div>
+    <div class="vc-accordion">
+      <div class="vc-accordion-header">
+        <span>ロリポップ の場合</span>
+        <i class="bi bi-chevron-down arrow"></i>
+      </div>
+      <div class="vc-accordion-body">
+        <ol style="font-size:0.88rem;color:var(--vc-gray-600);line-height:2.2;">
+          <li>ユーザー専用ページにログイン</li>
+          <li>「サーバーの管理・設定」→「PHP設定」をクリック</li>
+          <li>対象ドメインの「PHP設定」ボタンをクリック</li>
+          <li>「8.1(CGI版)」以上を選択して「変更」をクリック</li>
+        </ol>
+      </div>
+    </div>
+    <div class="vc-accordion">
+      <div class="vc-accordion-header">
+        <span>ConoHa WING の場合</span>
+        <i class="bi bi-chevron-down arrow"></i>
+      </div>
+      <div class="vc-accordion-body">
+        <ol style="font-size:0.88rem;color:var(--vc-gray-600);line-height:2.2;">
+          <li>ConoHaコントロールパネルにログイン</li>
+          <li>「サイト管理」→「サイト設定」→「応用設定」をクリック</li>
+          <li>「PHP設定」でバージョンを「8.1」以上に変更</li>
+        </ol>
+      </div>
+    </div>
+  </div>
+
+  <h4 style="font-weight:700;font-size:0.95rem;margin:24px 0 12px;"><i class="bi bi-3-circle me-1" style="color:var(--vc-primary);"></i> ファイルのアップロード</h4>
+  <p style="font-size:0.92rem;color:var(--vc-gray-600);margin-bottom:16px;">
+    FTPソフト（FileZilla推奨）またはサーバーのファイルマネージャーを使って、ファイルをアップロードします。
+  </p>
+
+  <div style="margin-bottom:16px;">
+    <strong style="font-size:0.88rem;">アップロード先の例：</strong>
+    <pre><code><span class="code-comment"># ドメイン直下に設置する場合</span>
+/home/ユーザー名/public_html/
+
+<span class="code-comment"># サブディレクトリに設置する場合（例：/vetcare/）</span>
+/home/ユーザー名/public_html/vetcare/
+
+<span class="code-comment"># さくらインターネットの場合</span>
+/home/ユーザー名/www/</code></pre>
+  </div>
+
+  <div class="vc-info-box vc-info-box-tip">
+    <div class="info-icon"><i class="bi bi-lightbulb-fill"></i></div>
+    <div>
+      <strong>ポイント：</strong>アップロード後、<code>index.php</code> が直接アクセスできるディレクトリ構成にしてください。
+      つまり <code>https://あなたのドメイン/index.php</code> でアクセスできれば正解です。
+    </div>
+  </div>
+
+  <h4 style="font-weight:700;font-size:0.95rem;margin:24px 0 12px;"><i class="bi bi-4-circle me-1" style="color:var(--vc-primary);"></i> パーミッション（権限）の設定</h4>
+  <p style="font-size:0.92rem;color:var(--vc-gray-600);margin-bottom:16px;">
+    以下のディレクトリに<strong>書き込み権限</strong>が必要です。FTPソフトで右クリック→「ファイルのパーミッション」で変更できます。
+  </p>
+  <div class="vc-table-wrap">
+    <table class="vc-table">
+      <thead><tr><th>ディレクトリ</th><th>パーミッション</th><th>用途</th></tr></thead>
+      <tbody>
+        <tr><td><code>data/</code></td><td><strong>777</strong> または <strong>775</strong></td><td>SQLiteデータベースファイルの保存</td></tr>
+        <tr><td><code>uploads/</code></td><td><strong>777</strong> または <strong>775</strong></td><td>ロゴ・画像のアップロード先</td></tr>
+        <tr><td><code>backups/</code></td><td><strong>777</strong> または <strong>775</strong></td><td>自動バックアップの保存先</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="vc-info-box vc-info-box-warning" style="margin-top:16px;">
+    <div class="info-icon"><i class="bi bi-exclamation-triangle-fill"></i></div>
+    <div>
+      <strong>セキュリティ注意：</strong>パーミッション 777 は全ユーザーに書き込み権限を与えます。
+      サーバー環境によっては 775 で動作する場合があり、そちらの方が安全です。まず 775 で試し、
+      うまくいかない場合のみ 777 に変更してください。
+    </div>
+  </div>
+
+  <h4 style="font-weight:700;font-size:0.95rem;margin:24px 0 12px;"><i class="bi bi-5-circle me-1" style="color:var(--vc-primary);"></i> ブラウザでアクセス</h4>
+  <p style="font-size:0.92rem;color:var(--vc-gray-600);">
+    ブラウザで <code>https://あなたのドメイン/</code>（またはサブディレクトリ）にアクセスすると、
+    <strong>セットアップウィザード</strong>が自動的に起動します。
+    詳細は<a href="#wizard">セットアップウィザードの説明</a>をご覧ください。
+  </p>
+</div>
+
+<!-- ===== VPS / 自前サーバー ===== -->
+<div class="vc-feature-block" id="vps">
+  <h3><div class="fb-icon" style="background:#fff7ed;color:#ea580c;"><i class="bi bi-server"></i></div>自前サーバー (VPS / 専用サーバー)</h3>
+  <p style="color:var(--vc-gray-600);margin-bottom:8px;">
+    VPS（ConoHa VPS、さくらVPS、AWS EC2、DigitalOcean等）や自宅サーバーに導入する方法です。
+  </p>
+  <div class="vc-floating-label" style="margin-bottom:20px;">難易度：中級</div>
+
+  <h4 style="font-weight:700;font-size:0.95rem;margin:20px 0 12px;">方法A：Apache + PHP（推奨）</h4>
+  <pre><code><span class="code-comment"># ====== Ubuntu / Debian の場合 ======</span>
+
+<span class="code-comment"># 1. システムを最新にする</span>
+sudo apt update && sudo apt upgrade -y
+
+<span class="code-comment"># 2. Apache と PHP をインストール</span>
+sudo apt install -y apache2 php8.1 php8.1-sqlite3 php8.1-mbstring php8.1-gd php8.1-curl libapache2-mod-php8.1
+
+<span class="code-comment"># 3. Apache の mod_rewrite を有効化</span>
+sudo a2enmod rewrite
+
+<span class="code-comment"># 4. VetCare Pro をダウンロード</span>
+cd /var/www/html
+sudo git clone https://github.com/boris15413-jpg/VetCare-Pro-ver-3.git vetcare
+cd vetcare
+
+<span class="code-comment"># 5. ディレクトリの権限を設定</span>
+sudo chown -R www-data:www-data data/ uploads/ backups/
+sudo chmod -R 775 data/ uploads/ backups/
+
+<span class="code-comment"># 6. Apache を再起動</span>
+sudo systemctl restart apache2
+
+<span class="code-comment"># 7. ブラウザで http://サーバーのIP/vetcare/ にアクセス</span></code></pre>
+
+  <h4 style="font-weight:700;font-size:0.95rem;margin:24px 0 12px;">方法B：Nginx + PHP-FPM</h4>
+  <pre><code><span class="code-comment"># ====== Ubuntu / Debian の場合 ======</span>
+
+<span class="code-comment"># 1. Nginx と PHP-FPM をインストール</span>
+sudo apt install -y nginx php8.1-fpm php8.1-sqlite3 php8.1-mbstring php8.1-gd
+
+<span class="code-comment"># 2. VetCare Pro をダウンロード</span>
+cd /var/www
+sudo git clone https://github.com/boris15413-jpg/VetCare-Pro-ver-3.git vetcare
+cd vetcare
+sudo chown -R www-data:www-data data/ uploads/ backups/
+
+<span class="code-comment"># 3. Nginx の設定ファイルを作成</span>
+sudo nano /etc/nginx/sites-available/vetcare</code></pre>
+
+  <p style="font-size:0.88rem;color:var(--vc-gray-600);margin:12px 0;">Nginx設定ファイルの内容：</p>
+  <pre><code>server {
+    listen 80;
+    server_name あなたのドメイン;
+    root /var/www/vetcare;
+    index index.php;
+
+    <span class="code-comment"># 予約ゲートウェイのルーティング</span>
+    location /booking/ {
+        try_files $uri /booking/index.php?$query_string;
+    }
+
+    <span class="code-comment"># APIのルーティング</span>
+    location /api/ {
+        try_files $uri $uri/ =404;
+    }
+
+    <span class="code-comment"># 静的ファイルのキャッシュ</span>
+    location ~* \.(css|js|png|jpg|jpeg|gif|svg|ico|woff|woff2)$ {
+        expires 7d;
+        add_header Cache-Control "public, immutable";
+    }
+
+    <span class="code-comment"># data/backups ディレクトリへのアクセスを禁止</span>
+    location ~ ^/(data|backups)/ {
+        deny all;
+        return 403;
+    }
+
+    <span class="code-comment"># PHPの処理</span>
+    location ~ \.php$ {
+        include snippets/fastcgi-php.conf;
+        fastcgi_pass unix:/run/php/php8.1-fpm.sock;
+    }
+
+    location / {
+        try_files $uri $uri/ /index.php?$query_string;
+    }
+}</code></pre>
+
+  <pre><code><span class="code-comment"># 4. サイトを有効化して再起動</span>
+sudo ln -s /etc/nginx/sites-available/vetcare /etc/nginx/sites-enabled/
+sudo nginx -t
+sudo systemctl restart nginx</code></pre>
+
+  <h4 style="font-weight:700;font-size:0.95rem;margin:24px 0 12px;">方法C：PHPビルトインサーバー（テスト用）</h4>
+  <p style="font-size:0.92rem;color:var(--vc-gray-600);margin-bottom:12px;">
+    開発やテスト目的で手軽に起動したい場合は、PHP内蔵サーバーが使えます。
+    <strong>本番環境では使用しないでください。</strong>
+  </p>
+  <pre><code><span class="code-comment"># VetCare Pro のディレクトリに移動</span>
+cd VetCare-Pro-ver-3
+
+<span class="code-comment"># PHP ビルトインサーバーを起動（ポート3000）</span>
+php -S 0.0.0.0:3000 router.php
+
+<span class="code-comment"># ブラウザで http://localhost:3000 にアクセス</span></code></pre>
+
+  <div class="vc-info-box vc-info-box-note">
+    <div class="info-icon"><i class="bi bi-info-circle-fill"></i></div>
+    <div>
+      <strong>CentOS / Rocky Linux / AlmaLinux をお使いの場合：</strong><br>
+      <code>apt</code> の代わりに <code>dnf</code>（または <code>yum</code>）を使用してください。
+      パッケージ名は <code>php81-php-fpm</code> <code>php81-php-pdo</code> のように異なる場合があります。
+      Remiリポジトリの追加が必要な場合もあります。
+    </div>
+  </div>
+</div>
+
+<!-- ===== XAMPP / MAMP ===== -->
+<div class="vc-feature-block" id="xampp">
+  <h3><div class="fb-icon" style="background:#fdf2f8;color:#db2777;"><i class="bi bi-pc-display"></i></div>XAMPP / MAMP（ローカル環境）</h3>
+  <p style="color:var(--vc-gray-600);margin-bottom:8px;">
+    自分のPC上で動かす方法です。インターネットに公開せず、ローカル環境で試したい方向け。
+  </p>
+  <div class="vc-floating-label" style="margin-bottom:20px;">難易度：初級</div>
+
+  <div class="vc-tabs-wrapper">
+    <div class="vc-tabs">
+      <button class="vc-tab active" data-target="#tab-xampp-win">XAMPP (Windows)</button>
+      <button class="vc-tab" data-target="#tab-xampp-mac">XAMPP (Mac)</button>
+      <button class="vc-tab" data-target="#tab-mamp">MAMP (Mac)</button>
+    </div>
+
+    <div id="tab-xampp-win" class="vc-tab-panel active">
+      <h4 style="font-weight:700;font-size:0.95rem;margin:0 0 16px;">XAMPPのインストール（Windows）</h4>
+      <ol style="font-size:0.92rem;color:var(--vc-gray-600);padding-left:20px;line-height:2.4;">
+        <li><a href="https://www.apachefriends.org/jp/index.html" target="_blank">XAMPP公式サイト</a> からWindows版をダウンロード
+          <ul style="margin:4px 0;padding-left:20px;line-height:1.8;">
+            <li>PHPバージョンが <strong>8.1以上</strong> のものを選択してください</li>
+          </ul>
+        </li>
+        <li>ダウンロードした <code>.exe</code> ファイルを実行してインストール
+          <ul style="margin:4px 0;padding-left:20px;line-height:1.8;">
+            <li>インストール先はデフォルト（<code>C:\xampp</code>）のままでOK</li>
+            <li>コンポーネントは「Apache」と「PHP」があれば動きます（MySQLは任意）</li>
+          </ul>
+        </li>
+        <li>XAMPP Control Panel を起動し、<strong>Apache</strong> の「Start」をクリック</li>
+        <li>VetCare Pro のファイルを <code>C:\xampp\htdocs\vetcare\</code> に配置
+          <ul style="margin:4px 0;padding-left:20px;line-height:1.8;">
+            <li>ZIPを解凍して、中身のファイル（index.php等）を上記フォルダにコピー</li>
+          </ul>
+        </li>
+        <li>ブラウザで <code>http://localhost/vetcare/</code> にアクセス</li>
+        <li>セットアップウィザードが表示されたら成功です！</li>
+      </ol>
+
+      <div class="vc-info-box vc-info-box-tip">
+        <div class="info-icon"><i class="bi bi-lightbulb-fill"></i></div>
+        <div>
+          <strong>htdocsフォルダの場所：</strong>
+          XAMPPのデフォルトインストールでは <code>C:\xampp\htdocs\</code> がWebルートです。
+          ここに <code>vetcare</code> フォルダを作成し、その中にファイルを配置してください。
+        </div>
+      </div>
+    </div>
+
+    <div id="tab-xampp-mac" class="vc-tab-panel">
+      <h4 style="font-weight:700;font-size:0.95rem;margin:0 0 16px;">XAMPPのインストール（Mac）</h4>
+      <ol style="font-size:0.92rem;color:var(--vc-gray-600);padding-left:20px;line-height:2.4;">
+        <li><a href="https://www.apachefriends.org/jp/index.html" target="_blank">XAMPP公式サイト</a> からmacOS版をダウンロード（PHP 8.1以上）</li>
+        <li>ダウンロードした <code>.dmg</code> ファイルを開き、XAMPPをApplicationsにドラッグ</li>
+        <li>XAMPP管理画面（Manager-osx）を起動し、<strong>Apache</strong> を起動</li>
+        <li>VetCare Pro のファイルを <code>/Applications/XAMPP/htdocs/vetcare/</code> に配置</li>
+        <li>ブラウザで <code>http://localhost/vetcare/</code> にアクセス</li>
+      </ol>
+    </div>
+
+    <div id="tab-mamp" class="vc-tab-panel">
+      <h4 style="font-weight:700;font-size:0.95rem;margin:0 0 16px;">MAMPのインストール（Mac）</h4>
+      <ol style="font-size:0.92rem;color:var(--vc-gray-600);padding-left:20px;line-height:2.4;">
+        <li><a href="https://www.mamp.info/en/mamp/mac/" target="_blank">MAMP公式サイト</a> から無料版をダウンロード</li>
+        <li>インストール後、MAMPを起動</li>
+        <li>「Preferences」→「PHP」タブで <strong>PHP 8.1以上</strong> を選択</li>
+        <li>「Start Servers」をクリック</li>
+        <li>VetCare Pro のファイルを <code>/Applications/MAMP/htdocs/vetcare/</code> に配置</li>
+        <li>ブラウザで <code>http://localhost:8888/vetcare/</code> にアクセス
+          <ul style="margin:4px 0;padding-left:20px;line-height:1.8;">
+            <li>MAMPの初期設定ではポート <strong>8888</strong> が使われます</li>
+          </ul>
+        </li>
+      </ol>
+    </div>
+  </div>
+
+  <div class="vc-info-box vc-info-box-danger" style="margin-top:20px;">
+    <div class="info-icon"><i class="bi bi-exclamation-octagon-fill"></i></div>
+    <div>
+      <strong>重要：</strong>XAMPP/MAMPはローカル開発・テスト用です。
+      インターネット上に公開する（外部からアクセスさせる）ことは<strong>セキュリティ上非常に危険</strong>です。
+      本番環境ではレンタルサーバーやVPSを使用してください。
+    </div>
+  </div>
+</div>
+
+<!-- ===== セットアップウィザード ===== -->
+<div class="vc-feature-block" id="wizard">
+  <h3><div class="fb-icon" style="background:var(--vc-success-50);color:var(--vc-success);"><i class="bi bi-magic"></i></div>セットアップウィザード</h3>
+  <p style="color:var(--vc-gray-600);margin-bottom:20px;">
+    ファイルを配置してブラウザでアクセスすると、自動的にセットアップウィザードが起動します。
+    6つのステップで初期設定が完了します。
+  </p>
+
+  <div class="vc-step">
+    <div class="vc-step-num">1</div>
+    <div class="vc-step-content">
+      <h4>環境チェック & データベース初期化</h4>
+      <p>PHPバージョン、必要な拡張、ディレクトリの書き込み権限を自動チェック。
+        問題がなければデータベーステーブルが自動作成されます。すべての機能がデフォルトで有効化されます。</p>
+    </div>
+  </div>
+  <div class="vc-step">
+    <div class="vc-step-num">2</div>
+    <div class="vc-step-content">
+      <h4>サンプルデータの投入（任意）</h4>
+      <p>動作確認用のサンプルデータ（テスト患者、飼い主、薬品マスタ、検査マスタ等）を投入できます。
+        「試しに使ってみたい」方はここで投入すると、すぐに各機能を試せます。不要なら「スキップ」でOK。</p>
+    </div>
+  </div>
+  <div class="vc-step">
+    <div class="vc-step-num">3</div>
+    <div class="vc-step-content">
+      <h4>管理者アカウントの作成</h4>
+      <p>ログインID（英数字）、パスワード（8文字以上）、表示名を入力して管理者アカウントを作成します。
+        ここで作成したアカウントがシステムの最初の管理者になります。</p>
+    </div>
+  </div>
+  <div class="vc-step">
+    <div class="vc-step-num">4</div>
+    <div class="vc-step-content">
+      <h4>施設情報の設定</h4>
+      <p>病院名、住所、電話番号、診療時間、定休日、予約設定（間隔・枠数・昼休み時間）、
+        消費税率、機能のON/OFFなどを設定します。すべて後から変更可能です。</p>
+    </div>
+  </div>
+  <div class="vc-step">
+    <div class="vc-step-num">5</div>
+    <div class="vc-step-content">
+      <h4>LINE連携の設定（任意）</h4>
+      <p>LINE Messaging APIのチャンネルアクセストークンとシークレットを入力すると、
+        予約通知・リマインダー通知をLINEで送信できるようになります。不要なら「スキップ」でOK。</p>
+    </div>
+  </div>
+  <div class="vc-step">
+    <div class="vc-step-num">6</div>
+    <div class="vc-step-content">
+      <h4>セットアップ完了！</h4>
+      <p>設定完了の確認画面が表示され、「ログイン画面へ」ボタンからすぐに利用開始できます。
+        Step 3 で作成したアカウントでログインしてください。</p>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 導入後の設定 ===== -->
+<div class="vc-feature-block" id="after-install">
+  <h3><div class="fb-icon" style="background:var(--vc-primary-50);color:var(--vc-primary);"><i class="bi bi-gear"></i></div>導入後にやること</h3>
+  <p style="color:var(--vc-gray-600);margin-bottom:20px;">セットアップ完了後、以下の設定を確認・変更することをおすすめします。</p>
+
+  <ul class="vc-feature-list">
+    <li><strong>config.php の編集（任意）</strong> - デバッグモードのOFF（<code>DEBUG_MODE</code> を <code>false</code> に変更）。本番環境では必ずOFFにしてください。</li>
+    <li><strong>ロゴ・角印のアップロード</strong> - 設定画面 → 画像設定から病院のロゴと角印画像をアップロード。書類に自動反映されます。</li>
+    <li><strong>スタッフアカウントの追加</strong> - 管理画面 → スタッフ管理から獣医師・看護師・受付スタッフのアカウントを作成。</li>
+    <li><strong>マスタデータの確認・修正</strong> - 薬品マスタ、検査マスタ、処置マスタのサンプルデータを確認し、自院の内容に合わせて修正してください。</li>
+    <li><strong>予約設定の確認</strong> - 予約時間帯、昼休み時間、枠数、定休日が自院の実態と合っているか確認。</li>
+    <li><strong>バックアップの確認</strong> - <code>data/</code> ディレクトリのバックアップ方法を確認。SQLiteファイルのコピーだけでバックアップ完了です。</li>
+    <li><strong>SSL/TLSの設定（本番環境必須）</strong> - 個人情報を扱うため、HTTPS通信は必須です。Let's Encryptで無料のSSL証明書を取得できます。</li>
+    <li><strong>IPホワイトリストの検討</strong> - 設定画面 → セキュリティから、EMRへのアクセスを特定IPに制限できます。</li>
+  </ul>
+</div>
+
+<!-- ===== トラブルシューティング ===== -->
+<div class="vc-feature-block" id="troubleshoot">
+  <h3><div class="fb-icon" style="background:var(--vc-danger-50);color:var(--vc-danger);"><i class="bi bi-bug"></i></div>トラブルシューティング</h3>
+  <p style="color:var(--vc-gray-600);margin-bottom:20px;">よくある問題と解決方法をまとめました。</p>
+
+  <div class="vc-accordion-group">
+    <div class="vc-accordion">
+      <div class="vc-accordion-header">
+        <span>画面が真っ白になる / 500エラーが出る</span>
+        <i class="bi bi-chevron-down arrow"></i>
+      </div>
+      <div class="vc-accordion-body">
+        <ul style="font-size:0.88rem;color:var(--vc-gray-600);line-height:2;">
+          <li><strong>原因1：</strong>PHPバージョンが8.0未満 → PHPバージョンを8.0以上に変更してください</li>
+          <li><strong>原因2：</strong>PDO拡張が無効 → <code>php -m | grep pdo</code> で確認。<code>pdo_sqlite</code> が必要です</li>
+          <li><strong>原因3：</strong>ファイルのアップロード漏れ → 全ファイルが揃っているか確認してください</li>
+          <li><strong>確認方法：</strong><code>config.php</code> の <code>DEBUG_MODE</code> を <code>true</code> に変更すると、エラーメッセージが表示されます</li>
+        </ul>
+      </div>
+    </div>
+    <div class="vc-accordion">
+      <div class="vc-accordion-header">
+        <span>「Permission denied」エラーが出る</span>
+        <i class="bi bi-chevron-down arrow"></i>
+      </div>
+      <div class="vc-accordion-body">
+        <ul style="font-size:0.88rem;color:var(--vc-gray-600);line-height:2;">
+          <li><code>data/</code>、<code>uploads/</code>、<code>backups/</code> ディレクトリのパーミッションを確認</li>
+          <li>FTPソフトで 777 または 775 に変更してください</li>
+          <li>VPSの場合：<code>sudo chown -R www-data:www-data data/ uploads/ backups/</code></li>
+        </ul>
+      </div>
+    </div>
+    <div class="vc-accordion">
+      <div class="vc-accordion-header">
+        <span>セットアップウィザードが表示されない</span>
+        <i class="bi bi-chevron-down arrow"></i>
+      </div>
+      <div class="vc-accordion-body">
+        <ul style="font-size:0.88rem;color:var(--vc-gray-600);line-height:2;">
+          <li>すでにセットアップが完了している可能性があります → ログイン画面が表示されるか確認</li>
+          <li><code>data/vetcare.db</code> ファイルが存在する場合、セットアップは完了しています</li>
+          <li>やり直したい場合は <code>data/vetcare.db</code> を削除してアクセスし直してください</li>
+        </ul>
+      </div>
+    </div>
+    <div class="vc-accordion">
+      <div class="vc-accordion-header">
+        <span>予約ページ (/booking/) にアクセスできない</span>
+        <i class="bi bi-chevron-down arrow"></i>
+      </div>
+      <div class="vc-accordion-body">
+        <ul style="font-size:0.88rem;color:var(--vc-gray-600);line-height:2;">
+          <li><strong>Apache：</strong><code>mod_rewrite</code> が有効か確認。<code>.htaccess</code> が正しく配置されているか確認</li>
+          <li><strong>Nginx：</strong>上記の設定例にある <code>location /booking/</code> ブロックが設定されているか確認</li>
+          <li><strong>代替方法：</strong><code>/index.php?page=public_booking</code> でも同じページにアクセスできます</li>
+          <li>設定画面でオンライン予約が<strong>有効</strong>になっているか確認してください</li>
+        </ul>
+      </div>
+    </div>
+    <div class="vc-accordion">
+      <div class="vc-accordion-header">
+        <span>文字化けする</span>
+        <i class="bi bi-chevron-down arrow"></i>
+      </div>
+      <div class="vc-accordion-body">
+        <ul style="font-size:0.88rem;color:var(--vc-gray-600);line-height:2;">
+          <li>PHP の <code>mbstring</code> 拡張がインストールされているか確認</li>
+          <li>ファイルのエンコーディングが UTF-8 であることを確認（FTPソフトの転送モードを「バイナリ」に）</li>
+          <li><code>php.ini</code> で <code>default_charset = "UTF-8"</code> を設定</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== アップデート方法 ===== -->
+<div class="vc-feature-block" id="update">
+  <h3><div class="fb-icon" style="background:#ecfdf5;color:var(--vc-success);"><i class="bi bi-arrow-repeat"></i></div>アップデート方法</h3>
+  <p style="color:var(--vc-gray-600);margin-bottom:20px;">新しいバージョンがリリースされた際の更新手順です。</p>
+
+  <div class="vc-info-box vc-info-box-danger">
+    <div class="info-icon"><i class="bi bi-exclamation-octagon-fill"></i></div>
+    <div>
+      <strong>アップデート前に必ず：</strong>
+      <code>data/vetcare.db</code> ファイルのバックアップを取ってください。
+      このファイルがすべてのデータ（患者、カルテ、予約等）を保持しています。
+    </div>
+  </div>
+
+  <h4 style="font-weight:700;font-size:0.95rem;margin:20px 0 12px;">git cloneで導入した場合</h4>
+  <pre><code><span class="code-comment"># 1. データベースのバックアップ</span>
+cp data/vetcare.db data/vetcare.db.backup
+
+<span class="code-comment"># 2. 最新版を取得</span>
+git pull origin main
+
+<span class="code-comment"># 3. ブラウザでアクセスして動作確認</span></code></pre>
+
+  <h4 style="font-weight:700;font-size:0.95rem;margin:20px 0 12px;">ZIPダウンロードで導入した場合</h4>
+  <ol style="font-size:0.92rem;color:var(--vc-gray-600);padding-left:20px;line-height:2.2;">
+    <li><code>data/vetcare.db</code> をPCにダウンロード（バックアップ）</li>
+    <li><code>uploads/</code> フォルダをPCにダウンロード（アップロード画像のバックアップ）</li>
+    <li>新バージョンのZIPをダウンロードして解凍</li>
+    <li>サーバー上のファイルを新バージョンで上書き（<code>data/</code> と <code>uploads/</code> は上書きしない）</li>
+    <li>ブラウザでアクセスして動作確認</li>
+  </ol>
+</div>
+
+</div><!-- /.vc-toc-main -->
+</div><!-- /.vc-toc-layout -->
+</div><!-- /.vc-section -->
+
+<!-- Footer -->
+<footer class="vc-footer">
+  <div class="vc-footer-inner">
+    <div><h5><i class="bi bi-heart-pulse-fill me-2"></i>VetCare Pro</h5><p>オープンソースの動物病院向け電子カルテシステム。</p></div>
+    <div><h5>ドキュメント</h5><a href="index.html">トップページ</a><a href="features.html">機能詳細</a><a href="install.html">導入ガイド</a><a href="customize.html">カスタマイズ</a></div>
+    <div><h5>リンク</h5><a href="https://github.com/boris15413-jpg/VetCare-Pro-ver-3" target="_blank">GitHub</a><a href="https://github.com/boris15413-jpg/VetCare-Pro-ver-3/issues" target="_blank">Issue Tracker</a></div>
+    <div><h5>監修者</h5><a href="https://github.com/boris15413-jpg" target="_blank">boris (GitHub)</a></div>
+  </div>
+  <div class="vc-footer-bottom">
+    <span>&copy; 2025-2026 VetCare Pro. MIT License.</span>
+    <span>Built with <i class="bi bi-robot"></i> Claude AI</span>
+  </div>
+</footer>
+
+<script src="assets/js/main.js"></script>
+</body>
+</html>
