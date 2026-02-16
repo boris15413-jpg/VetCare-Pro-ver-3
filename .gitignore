@@ -1,0 +1,12 @@
+data/
+uploads/images/*
+uploads/pathology/*
+!uploads/.gitkeep
+.env
+*.log
+*.db
+.DS_Store
+Thumbs.db
+node_modules/
+dist/
+package-lock.json
